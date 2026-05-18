@@ -1,0 +1,6 @@
+AuthType Basic
+
+AuthName "protected"
+
+AuthUserFile "/a2/passwords/protected_dir.pwd"
+require valid-user

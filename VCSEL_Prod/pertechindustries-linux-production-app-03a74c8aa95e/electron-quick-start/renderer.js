@@ -1,0 +1,131 @@
+// This file is required by the index.html file and will
+// be executed in the renderer process for that window.
+// All of the Node.js APIs are available in this process.
+const {electron} = require('electron');
+const { ipcRenderer } =require('electron');
+
+
+var FormData = require('form-data');
+
+
+/*
+var serialPort = require('serialport');
+
+
+//List serial ports
+serialPort.list(function(err, ports) {
+    console.log(ports);
+});
+*/
+
+window.addEventListener('load', function() {
+    
+    window.app = new Vue({
+        router,
+        store,
+        electron,
+        data: {
+            counter: 0,
+            displayImg: '',
+            showDisplayImg: false,
+            auto: true,
+            showError: false,
+            errorMessage: '',
+            showErrorPrompt: false,
+            errorPromptMessage: '',
+            instructions: '',
+            showStateIndicator: false,
+            stateIndicatorMessage: '',
+            tests: [],
+            scanner: '',
+            passFailVisible: false,
+            passFailState: 3,
+            retryVisible: false,
+            nextTestVisible: false,
+            testIndex: 0,
+            showResultText: false,
+            resultText: '',
+            resultState: 'fail',
+            unitSerialNumber: '',
+            testerName: '',
+            startTime: 0,
+            dbTestID: 0,
+            allowBack: true
+        },
+        mounted: function() {
+            var self = this;
+            try {
+                self.scanner = new scanner6100();
+            } catch (err) {
+                console.warn('6100 scanner disabled:', err);
+                self.scanner = null;
+            }
+            self.rs232Device = new rs232Device();
+            self.genericUSBDevice = new genericUSBDevice();
+
+            ipcRenderer.on('navigate', (e, routePath) => {
+                router.push(routePath)
+            });
+
+            //Load from config
+            if (localStorage.getItem("cfgDataServiceURL") === null) {
+                localStorage.setItem("cfgDataServiceURL", CFG_DATA_SERVICE_URL);
+            } else {
+                CFG_DATA_SERVICE_URL = localStorage.getItem("cfgDataServiceURL");
+            }
+        },
+        methods: {
+            //------------------------------------------------------------------------------------------------------
+            failTest: function() {
+                window.app.passFailVisible = false;
+                window.app.retryVisible = true;
+            },
+            //------------------------------------------------------------------------------------------------------
+            passTest: function() {
+                window.app.passFailVisible = false;
+                window.app.tests[window.app.testIndex].passed_test = 'true';
+                if(window.app.testIndex + 1 < window.app.tests.length) {
+                    window.app.tests[window.app.testIndex].is_current = "0";
+                    window.app.testIndex++;
+                    window.app.tests[window.app.testIndex].is_current = "1";
+
+                    if(window.app.auto) {
+                        this.retryTest();
+                    } else {
+                        window.app.nextTestVisible = true;
+                    }
+                }
+            },
+            //------------------------------------------------------------------------------------------------------
+            userFailTest: function() {
+                window.app.passFailVisible = false;
+                this.passFailState = 0;
+            },
+            //------------------------------------------------------------------------------------------------------
+            userPassTest: function() {
+                window.app.passFailVisible = false;
+                this.passFailState = 1;
+            },
+            //------------------------------------------------------------------------------------------------------
+            retryTest: function() {
+                window.app.showResultText = false;
+                window.app.showDisplayImg = false;
+                window.app.showError = false;
+                window.app.showErrorPrompt = false;
+                window.app.showStateIndicator = false;
+                window.app.passFailVisible = false;
+                window.app.retryVisible = false;
+                window.app.nextTestVisible = false;
+                document.getElementById("altInstructions").innerHTML = '';
+
+                window.app.instructions = window.app.tests[window.app.testIndex].instructions;
+                setTimeout(() => {
+                    runTest(window.app.tests[window.app.testIndex].test_id);
+                }, 100);
+            },
+            //------------------------------------------------------------------------------------------------------
+
+            //------------------------------------------------------------------------------------------------------
+        }
+    }).$mount('#app');
+});

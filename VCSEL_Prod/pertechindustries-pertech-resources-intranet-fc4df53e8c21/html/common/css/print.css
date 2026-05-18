@@ -1,0 +1,38 @@
+*, body{
+    font-size: 10pt;
+}
+
+header, #main_menu, .button, footer, .nav_element, .ui-tabs-nav, .dataTables_filter{
+    display: none;
+}
+
+h2{
+    font-size:18pt;
+    font-weight: bold;
+    color: #FF5C00;
+    border-bottom: 1pt solid #ff5c00;
+    margin: 0;
+    padding: 0;
+}
+
+.win_title{
+    font-weight: bold;
+    font-size: 14pt;
+}
+
+div.window div.collapsed{
+    display:none;
+}
+
+table{
+    border-left: 1px solid #666;
+    border-top: 1px solid #666;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th{
+    border-right: 1px solid #666;
+    border-bottom: 1px solid #666;
+    vertical-align: top;
+}

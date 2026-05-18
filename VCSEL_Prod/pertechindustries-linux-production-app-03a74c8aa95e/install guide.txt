@@ -1,0 +1,15 @@
+Copy "dist" to "Documents"
+
+open terminal in dist folder
+
+sudo cp *.so /usr/local/lib
+
+navigate to /usr/local/lib
+
+sudo chmod +x *.so
+
+sudo ldconfig
+
+In dist folder run .deb package
+
+add permissions to usb and serial per "ubuntu usb permissions.txt" file

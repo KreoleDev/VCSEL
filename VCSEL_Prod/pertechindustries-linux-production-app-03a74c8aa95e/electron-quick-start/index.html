@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Pertech Production</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link href="./lib/css/reset.css" rel="stylesheet">
+    <link href="./lib/css/screen.css" rel="stylesheet">
+    <link href="./lib/css/responsive.css" rel="stylesheet">
+    <script src="./lib/js/vue-2-5-21.js"></script>
+    <script src="./lib/js/vue-router-3-0-2.js"></script>
+    <script src="./lib/js/axios-0-18-0.js"></script>
+    <script src="./lib/js/velocity.min.js"></script>
+    <script src="./lib/js/velocity.ui.min.js"></script>
+    <script src="./config.js"></script>
+    <script src="./lib/js/store.js"></script>
+    <script src="./lib/js/animations.js"></script>
+    <script src="./lib/js/server-requests.js"></script>
+    <script src="./lib/js/pertech-6100.api.js"></script>
+    <script src="./lib/js/rs232.api.js"></script>
+    <script src="./lib/js/generic-usb.api.js"></script>
+    <script src="./pages/select-product.js"></script>
+    <script src="./pages/select-tla.js"></script>
+    <script src="./pages/select-mode.js"></script>
+    <script src="./pages/config.js"></script>
+    <script src="./router.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <router-view></router-view>
+    </div>
+    <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+// app global css in SCSS form
+.productBtn {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: $primary;
+  border: 0;
+  padding: 10px 10px;
+  margin-left: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  width: 128px;
+  height: 128px;
+  text-align: center;
+  box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.9);
+}
+.productBtn:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+#templateWrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52px;
+  height: calc(100vh - 52px);
+}
