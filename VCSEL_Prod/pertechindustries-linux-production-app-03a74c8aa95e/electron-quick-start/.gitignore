@@ -1,6 +1,0 @@
-node_modules/
-.local-api.log
-.php-sessions/
-local-api/production/uploads/*
-!local-api/production/uploads/firmwares/
-!local-api/production/uploads/firmwares/**
