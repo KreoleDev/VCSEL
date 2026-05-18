@@ -68,7 +68,10 @@ window.addEventListener('load', function() {
             });
 
             //Load from config
-            if (localStorage.getItem("cfgDataServiceURL") === null) {
+            if (
+                localStorage.getItem("cfgDataServiceURL") === null ||
+                localStorage.getItem("cfgDataServiceURL") === CFG_LEGACY_DATA_SERVICE_URL
+            ) {
                 localStorage.setItem("cfgDataServiceURL", CFG_DATA_SERVICE_URL);
             } else {
                 CFG_DATA_SERVICE_URL = localStorage.getItem("cfgDataServiceURL");

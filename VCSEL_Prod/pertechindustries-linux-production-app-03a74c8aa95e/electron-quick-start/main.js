@@ -44,7 +44,18 @@ process.on('uncaughtException', function(err) {
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1024, height: 768, 'minWidth': 1024, 'minHeight': 768, icon: __dirname + '/lib/images/pertech.png' })
+  mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 768,
+    'minWidth': 1024,
+    'minHeight': 768,
+    icon: __dirname + '/lib/images/pertech.png',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true
+    }
+  })
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')

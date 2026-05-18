@@ -4,10 +4,46 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-const ref = require('ref');
-const ffi = require('ffi');
 const fs = require('fs');
-var Struct = require('ref-struct');
+let scannerNativeAvailable = true;
+let ref;
+let ffi;
+let Struct;
+
+try {
+    ref = require('ref');
+    ffi = require('ffi');
+    Struct = require('ref-struct');
+} catch (err) {
+    scannerNativeAvailable = false;
+    console.warn('6100 scanner native module disabled:', err.message);
+
+    ref = {
+        refType: function () {
+            return function () {};
+        }
+    };
+
+    Struct = function () {
+        return function () {
+            this.ref = function () {
+                return this;
+            };
+        };
+    };
+
+    ffi = {
+        Library: function () {
+            return new Proxy({}, {
+                get: function () {
+                    return function () {
+                        return -1;
+                    };
+                }
+            });
+        }
+    };
+}
 
 var statStruct = Struct({
     'ub_uf': 'uint8',
@@ -170,6 +206,10 @@ var scanner6100 = function () {
             var _this = this;
 
             return new Promise(function (resolve, reject) {
+                if(!scannerNativeAvailable) {
+                    reject('6100 scanner native module is not installed on this Mac dev build');
+                    return;
+                }
                 window.app.stateIndicatorMessage= 'Attempting connection to scanner';
                 window.app.showStateIndicator = true;
                 setTimeout(() => {

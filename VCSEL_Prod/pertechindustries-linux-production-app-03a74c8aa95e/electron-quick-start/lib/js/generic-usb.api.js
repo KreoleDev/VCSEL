@@ -58,7 +58,21 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-const usb = require('usb');
+let usbNativeAvailable = true;
+let usb;
+
+try {
+    usb = require('usb');
+} catch (err) {
+    usbNativeAvailable = false;
+    console.warn('USB native module disabled:', err.message);
+    usb = {
+        on: function () {},
+        findByIds: function () {
+            return undefined;
+        }
+    };
+}
 let usbConnected = false;
 let usbDevice;
 let usbInterface;
@@ -91,6 +105,10 @@ var genericUSBDevice = function () {
             var _this = this;
 
             return new Promise(function (resolve, reject) {
+                if(!usbNativeAvailable) {
+                    reject('USB native module is not installed on this Mac dev build');
+                    return;
+                }
                 //window.app.stateIndicatorMessage= 'Connecting to USB device';
                 //window.app.showStateIndicator = true;
                 setTimeout(() => {

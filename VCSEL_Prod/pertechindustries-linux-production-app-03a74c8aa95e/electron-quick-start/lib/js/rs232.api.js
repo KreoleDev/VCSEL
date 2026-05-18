@@ -4,7 +4,21 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-const serialPort = require('serialport');
+let serialPortNativeAvailable = true;
+let serialPort;
+
+try {
+    serialPort = require('serialport');
+} catch (err) {
+    serialPortNativeAvailable = false;
+    console.warn('Serial port native module disabled:', err.message);
+    serialPort = function () {
+        throw new Error('Serial port native module is not installed on this Mac dev build');
+    };
+    serialPort.list = function(callback) {
+        callback(null, []);
+    };
+}
 let serialPortInstance;
 let serialReceivedData = [];
 let serialPortConnected = false;
@@ -154,6 +168,10 @@ var rs232Device = function () {
             var _this = this;
 
             return new Promise(function (resolve, reject) {
+                if(!serialPortNativeAvailable) {
+                    reject('Serial port native module is not installed on this Mac dev build');
+                    return;
+                }
                 lastComPort = comPort;
                 lastBaudRate = baudRate;
                 lastDataBits = dataBits;

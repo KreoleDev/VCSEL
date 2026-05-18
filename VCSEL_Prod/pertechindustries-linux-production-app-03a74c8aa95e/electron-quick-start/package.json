@@ -6,6 +6,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "start:api": "./start-local-api.sh",
+    "start:mac": "./run-local-mac.sh",
     "dist": "build",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -17,29 +19,38 @@
     "demo"
   ],
   "build": {
-    "appId": "Pertech Production",
-    "linux": {
-      "icon": "./build/icon.icns",
+    "appId": "com.pertechindustries.production",
+    "productName": "Pertech Production",
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!local-api/**",
+      "!*.log",
+      "!.php-sessions/**",
+      "!local-api/production/uploads/**"
+    ],
+    "extraResources": [
+      {
+        "from": "local-api",
+        "to": "local-api"
+      }
+    ],
+    "mac": {
+      "icon": "./build/icons/icon.icns",
       "target": [
-        "AppImage",
-        "deb"
+        "dmg",
+        "zip"
       ]
     }
   },
   "author": "Pertech <contact@pertechindustries.com>",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^3.0.7",
-    "electron-builder": "^20.38.4",
-    "electron-rebuild": "^1.8.2"
+    "electron": "^11.5.0",
+    "electron-builder": "^22.14.13"
   },
   "dependencies": {
-    "ffi": "^2.3.0",
     "form-data": "^2.3.3",
-    "graceful-fs": "^4.1.15",
-    "ref-array": "^1.2.0",
-    "ref-struct": "^1.1.0",
-    "serialport": "^7.1.1",
-    "usb": "^1.5.0"
+    "graceful-fs": "^4.1.15"
   }
 }
