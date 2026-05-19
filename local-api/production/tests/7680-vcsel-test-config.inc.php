@@ -22,6 +22,17 @@ stringFromArray = function(data) {
     return str;
 };
 //---------------------------------------------------------------------------------------------------------------
+isVcselProgrammerPort = function(port) {
+    let vendorId = (port.vendorId || '').toLowerCase();
+    let productId = (port.productId || '').toLowerCase();
+    let manufacturer = (port.manufacturer || '').toLowerCase();
+
+    return (
+        (vendorId == "04d8" && productId == "ffee") ||
+        manufacturer.indexOf('devantech') >= 0
+    );
+};
+//---------------------------------------------------------------------------------------------------------------
 isVcselOnPortIndex = function(validComPorts, checkIndex) {
     return new Promise(function(resolve, reject) {
         if(checkIndex < validComPorts.length) {
@@ -111,11 +122,11 @@ findVcselOnSerial = function() {
         window.app.rs232Device.findDevices().then((ports) => {
             for(var i=0; i < ports.length; i++){
                 //console.log('Ven: ' + ports[i].vendorId + ' PID: ' + ports[i].productId);
-                if(ports[i].vendorId == "04d8" && ports[i].productId == "ffee") {
-                    validComPorts[0] = {
+                if(isVcselProgrammerPort(ports[i])) {
+                    validComPorts.push({
                         "comName": ports[i].comName,
                         "manufacturer": ports[i].manufacturer
-                    };
+                    });
                 }
             }
 
