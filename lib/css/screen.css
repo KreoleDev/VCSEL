@@ -194,6 +194,54 @@ table.infoTable{
     #productsList{
         padding-bottom:40px;
     }
+
+    .loginContent{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#E5EFF1;
+    }
+        #loginPanel{
+            width:360px;
+            border:1px solid #789;
+            border-radius:8px;
+            background:#fff;
+            box-shadow:2px 2px 12px rgba(0,0,0,0.35);
+            padding:24px;
+        }
+            #loginLogo{
+                height:58px;
+                background-image:url(../images/pertech.png);
+                background-size:contain;
+                background-repeat:no-repeat;
+                background-position:center center;
+                margin-bottom:12px;
+            }
+            #loginPanel h1{
+                padding:0 0 18px 0;
+                text-align:center;
+            }
+            .loginField{
+                margin-bottom:14px;
+            }
+                .loginField label{
+                    display:block;
+                    font-weight:bold;
+                    margin-bottom:6px;
+                }
+                .loginField input{
+                    width:100%;
+                    box-sizing:border-box;
+                    font-size:20px;
+                    line-height:32px;
+                    padding:2px 8px;
+                }
+            #loginPanel button{
+                width:100%;
+                line-height:34px;
+                font-size:18px;
+            }
+
     .productContainer{
         width: 140px;
         height: 140px;

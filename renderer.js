@@ -50,7 +50,9 @@ window.addEventListener('load', function() {
             testerName: '',
             startTime: 0,
             dbTestID: 0,
-            allowBack: true
+            allowBack: true,
+            isAuthenticated: false,
+            currentUser: ''
         },
         mounted: function() {
             var self = this;
@@ -62,6 +64,8 @@ window.addEventListener('load', function() {
             }
             self.rs232Device = new rs232Device();
             self.genericUSBDevice = new genericUSBDevice();
+            self.isAuthenticated = sessionStorage.getItem('pertechAuthenticated') === '1';
+            self.currentUser = sessionStorage.getItem('pertechUsername') || '';
 
             ipcRenderer.on('navigate', (e, routePath) => {
                 router.push(routePath)

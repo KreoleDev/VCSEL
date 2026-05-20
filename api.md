@@ -84,6 +84,50 @@ Keep the response shapes stable unless the Electron app is updated at the same t
 
 ## App Startup Endpoints
 
+### POST `/login/`
+
+Authenticates the operator before the app can be used. Any valid DB user is allowed into the app; the app does not apply role-based restrictions. This login identity is only for app access; the test flow still asks for `testerName` separately.
+
+Request:
+
+```json
+{
+  "mode": "login",
+  "username": "operator",
+  "password": "password"
+}
+```
+
+Response:
+
+```json
+{
+  "authenticated": true,
+  "display_name": "Operator Name"
+}
+```
+
+Failure response:
+
+```json
+{
+  "authenticated": false,
+  "display_name": ""
+}
+```
+
+The local PHP endpoint reads from the existing DB login table. Configure the table and columns with:
+
+```text
+PERTECH_AUTH_TABLE
+PERTECH_AUTH_USERNAME_COLUMN
+PERTECH_AUTH_PASSWORD_COLUMN
+PERTECH_AUTH_DISPLAY_NAME_COLUMN
+PERTECH_AUTH_ACTIVE_COLUMN
+```
+
+The cloud API should validate against the same DB-backed login records.
+
 ### POST `/version/`
 
 Checks whether the app version is current.
@@ -310,7 +354,7 @@ Behavior:
 3. Load each test's `codeset` from `2019_prod_tests`.
 4. Emit a JavaScript `switch(test_id)` where each case runs that test's `codeset`.
 
-Important migration note: because `codeset` is JavaScript stored in the DB, the cloud API must either preserve this endpoint exactly or the app must be redesigned to avoid remote executable scripts.
+Important migration note: because `codeset` is JavaScript stored in the DB, the cloud API must preserve this endpoint and continue returning executable JavaScript generated from the database.
 
 ## Static Assets
 
@@ -736,7 +780,7 @@ getLEDValue()
 getCollectorValue()
 ```
 
-If Burster Home saves results, that behavior is currently expected to be in `2019_prod_tests.codeset` for the selected TLA. The cloud API must preserve those `codeset` scripts or the app must be updated to call a new explicit Burster endpoint.
+If Burster Home saves results, that behavior is currently expected to be in `2019_prod_tests.codeset` for the selected TLA. The cloud API must preserve those `codeset` scripts and continue serving them through `tests/load-tests.php`.
 
 ## 7680 Board Test API
 
@@ -970,4 +1014,3 @@ Serial printer/VCSEL/Burster communication: lib/js/rs232.api.js
 ```
 
 Do not move those hardware operations into the cloud API unless the physical devices are also attached to the server, which is not the current design.
-
