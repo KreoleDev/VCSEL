@@ -176,6 +176,17 @@ table.infoTable{
         background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
         border-bottom:1px solid #888;
+        padding-right:100px;
+    }
+    .logoutButton{
+        position:fixed;
+        top:4px;
+        right:8px;
+        z-index:5;
+        height:24px;
+        padding:0 12px;
+        font-size:13px;
+        line-height:20px;
     }
     #breadcrumbs ol li{
         display:inline-block;

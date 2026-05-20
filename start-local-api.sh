@@ -28,4 +28,5 @@ exec php \
   -d "include_path=$DOCROOT:/opt/homebrew/share/php:/usr/local/share/php:/usr/share/php" \
   -d "session.save_path=$SESSION_DIR" \
   -S "$HOST:$PORT" \
-  -t "$DOCROOT"
+  -t "$DOCROOT" \
+  "$DOCROOT/router.php"

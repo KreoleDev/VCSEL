@@ -21,6 +21,7 @@ const selectTLAPage = Vue.component('selectTLAPage', function (resolve, reject) 
                 </div>
 
                 <div id="mainContent">
+                    <button class="logoutButton" v-on:click="window.app.logout()">Logout</button>
                     <nav id="breadcrumbs">
                         <ol>
                             <li><router-link to="/"><strong>Product:</strong> {{ productName }}</router-link></li>

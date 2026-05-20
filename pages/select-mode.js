@@ -26,6 +26,7 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
                 </div>
 
                 <div id="mainContent" v-bind:style="{ color: (mode=='production'?'#000':'#900') }">
+                    <button class="logoutButton" v-on:click="window.app.logout()">Logout</button>
                     <nav id="breadcrumbs">
                         <ol>
                             <li><router-link v-bind:class="{ disabled: !window.app.allowBack }" to="/"><strong>Product:</strong> {{ productName }}</router-link></li>

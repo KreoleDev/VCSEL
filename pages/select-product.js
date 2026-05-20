@@ -14,6 +14,7 @@ const selectProductPage = Vue.component('selectProductPage', function (resolve, 
             </div>
 
             <div id="mainContent">
+                <button class="logoutButton" v-on:click="window.app.logout()">Logout</button>
                 <h1>Select a product to configure and test:</h1>
                 <div id="productsList">
                     <div v-for="product in products" v-on:click="listTLAs(product.product_id, product.title)" class="productContainer">

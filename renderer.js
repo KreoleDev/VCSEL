@@ -83,6 +83,24 @@ window.addEventListener('load', function() {
         },
         methods: {
             //------------------------------------------------------------------------------------------------------
+            logout: function() {
+                sessionStorage.removeItem('pertechAuthenticated');
+                sessionStorage.removeItem('pertechUsername');
+                sessionStorage.removeItem('pertechDisplayName');
+                this.isAuthenticated = false;
+                this.currentUser = '';
+                this.tests = [];
+                this.testerName = '';
+                this.showError = false;
+                this.showErrorPrompt = false;
+                this.showStateIndicator = false;
+                this.passFailVisible = false;
+                this.retryVisible = false;
+                this.nextTestVisible = false;
+                this.$router.push('/login');
+            },
+            //------------------------------------------------------------------------------------------------------
+            //------------------------------------------------------------------------------------------------------
             failTest: function() {
                 window.app.passFailVisible = false;
                 window.app.retryVisible = true;
