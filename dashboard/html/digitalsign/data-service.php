@@ -15,7 +15,7 @@ spl_autoload_register(function($class){
 });
 
 $common=array();
-$common['db']=new db(dirname(__FILE__) . '/../sites/pertech/protected/db.info.php');
+$common['db']=new api_db();
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: X-Requested-With');

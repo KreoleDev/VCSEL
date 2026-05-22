@@ -104,7 +104,7 @@ if($common['security']->check_rights(0)){
             }
             
             //find password min length
-            $db=new db('protected/db.info.php');
+            $db=new api_db();
             $site_info=$db->pec('SELECT local_password_min_length FROM sites WHERE site_name=? LIMIT 1',array($_SESSION['site_name']),'s',array('local_password_min_length'));
             
             //Check new password info

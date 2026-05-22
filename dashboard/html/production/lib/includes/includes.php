@@ -34,6 +34,8 @@ spl_autoload_register(function($class){
     require_once(dirname(__FILE__) .  '/../../lib/classes/' . $class . '.class.php'); 
 });
 
+require_once(dirname(__DIR__, 3) . '/API/db-gateway.php');
+
 $common=array();
-$common['db']=new db(dirname(__FILE__) . '/../../protected/db.info.php');
+$common['db']=api_db_gateway_instance();
 ?>

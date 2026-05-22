@@ -26,7 +26,7 @@ require_once('common/includes/header.inc.php');
 </style>
 <?php
 
-$common['db']=new db(dirname(__FILE__) . '/sites/pertech/protected/db.info.php');
+$common['db']=new api_db();
 $results = $common['db']->pec('SELECT manual_id, part_number, title, keywords FROM 7008_manuals WHERE active=1',array(),'',array('manual_id', 'part_number', 'title', 'keywords'));
 
 $headings=array('Part Number','Title','');

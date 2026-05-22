@@ -1,0 +1,5 @@
+node_modules/
+.php-sessions/
+dashboard/.php-sessions/
+*.log
+dashboard/config/db.config.php

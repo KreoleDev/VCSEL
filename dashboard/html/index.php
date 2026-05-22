@@ -73,7 +73,7 @@ function load_landing(){
     //Check to see if password has expired
     if(isset($_SESSION['local_password_expire_days'])){
         //Password can expire
-        $common['db']=new db('sites/' . $_SESSION['site_path'] . 'protected/db.info.php');
+        $common['db']=new api_db();
         $pw_results=$common['db']->pec('SELECT password_set_date FROM core_users WHERE user_id=? LIMIT 1',array($_SESSION['user_id']),'i',array('password_set_date'));
         if(strtotime($pw_results[0]['password_set_date'].'+'.$_SESSION['local_password_expire_days'].' days')<strtotime(date('c'))){
             //Password expired

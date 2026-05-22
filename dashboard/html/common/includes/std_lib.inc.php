@@ -51,6 +51,6 @@ $common['tabs']=new tabs();
 $common['format']=new format();
 
 if(isset($_SESSION['site_path'])){
-    $common['db']=new db('sites/' . $_SESSION['site_path'] . 'protected/db.info.php');
+    $common['db']=new api_db();
 }
 ?>

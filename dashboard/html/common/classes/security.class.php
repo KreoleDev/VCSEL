@@ -21,7 +21,7 @@ class security{
         $username=strtolower($username);
         
         //look up to see if site defined exists and collect info on site
-        $db=new db('protected/db.info.php');
+        $db=new api_db();
         $site_info=$db->pec('SELECT site_path, timezone, auth_type, session_expire_hours, local_password_expire_days, max_login_attempt_count, failed_login_lockout_minutes FROM sites WHERE site_name=? AND enabled LIMIT 1',array($site),'s',array('site_path', 'timezone', 'auth_type', 'session_expire_hours', 'local_password_expire_days','max_login_attempt_count', 'failed_login_lockout_minutes'));
         if(!empty($site_info)){
             $_SESSION['timezone']=$site_info[0]['timezone']; //Used to set timezone on each loaded page
@@ -30,7 +30,7 @@ class security{
             
             //Connect to site specific database
             if(file_exists('sites/' . $site_info[0]['site_path'] . 'protected/db.info.php')){
-                $site_db=new db('sites/' . $site_info[0]['site_path'] . 'protected/db.info.php');
+                $site_db=new api_db();
                 
                 //verify useraccount exists
                 $user_info=$site_db->pec('SELECT user_id, first_name, last_name FROM core_users WHERE username=? LIMIT 1',array($username),'s',array('user_id','first_name', 'last_name'));
@@ -80,7 +80,7 @@ class security{
         $status['success']=false;
         
         //create db connection for site
-        $site_db=new db('sites/' . $site_path . 'protected/db.info.php');
+        $site_db=new api_db();
         
         //check failed login attempts based on $max_login_attempt_count and $failed_login_lockout_minutes
         $failed_attempts=$site_db->pec('SELECT count(*) FROM core_user_auth_actions WHERE ext_user_id=? AND action="login" AND status="fail" AND datetime>SUBTIME(NOW(),CONCAT("0:",?))',array($user_id,$failed_login_lockout_minutes),'ii',array('count'));
@@ -151,7 +151,7 @@ class security{
         $status=array();
         
         //create db connection for site
-        $site_db=new db('sites/' . $site_path . 'protected/db.info.php');
+        $site_db=new api_db();
         
         $site_db->start_transaction();
             //-------------------------------------------------------------------//
@@ -320,7 +320,7 @@ class security{
     public function logout(){
         $success=false;
         if(isset($_SESSION['site_path'])){
-            $site_db=new db('sites/' . $_SESSION['site_path'] . 'protected/db.info.php');
+            $site_db=new api_db();
             //mark log off
             $site_db->pec('INSERT INTO core_user_auth_actions SET ext_user_id=?, datetime=NOW(), action="logout", status="success", remote_address=?',array($_SESSION['user_id'],$_SERVER['REMOTE_ADDR']),'is');
             

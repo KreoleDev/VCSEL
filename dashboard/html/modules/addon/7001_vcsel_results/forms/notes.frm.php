@@ -3,6 +3,7 @@
 //Created:      2020.10.05
 //Revision:     2020.10.05
 require_once('common/includes/std_lib.inc.php');
+require_once(CFG_CMS_INCLUDE_PATH . 'API/vcsel-results.php');
 
 /*
 *   
@@ -70,13 +71,13 @@ if($common['security']->check_rights(0)){
         //Errors found
         show($_POST,$errors,array('mode'=>'insert', 'vcselSerialNumber' => $_POST['vcselSerialNumber']));
       }else{
-        //Add note
-        $affected=$common['db']->pec('INSERT INTO 2019_prod_7680_vcsel_results_notes SET dateTime=NOW(), note=?, extUserId=?, extVcselSerialNumber=?',
-            array($_POST['note'], $_SESSION['user_id'], $_POST['vcselSerialNumber']),
-            'sii');
-        
-        //Create log entry
-        $common['db']->pec('INSERT INTO core_user_module_actions SET ext_user_id=?, ext_module_id=?, datetime=NOW(), action="Added Note", remote_address=?',array($_SESSION['user_id'],$_SESSION['mod_id'],$_SERVER['REMOTE_ADDR']),'iis');
+        $affected = api_vcsel_results_add_note(
+            $_SESSION['user_id'],
+            $_SESSION['mod_id'],
+            $_SERVER['REMOTE_ADDR'],
+            $_POST['vcselSerialNumber'],
+            $_POST['note']
+        );
         
         $state=$affected?'success':'fail';
         $msg=$affected?'Note was successfully created':'Note was NOT successfully created';

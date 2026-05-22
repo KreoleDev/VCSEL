@@ -3,6 +3,7 @@
 //Created:      2019.06.11
 //Revision:     2020.10.05
 require_once('common/includes/std_lib.inc.php');
+require_once(CFG_CMS_INCLUDE_PATH . 'API/vcsel-results.php');
 
 /*
 *   2019.06.18  CP  Added table from database in
@@ -15,6 +16,28 @@ require_once('common/includes/std_lib.inc.php');
 */
 
 $page_title='Vcsel Results';
+$additional_head='
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#vcsel_results_table").dataTable({
+        "bDestroy": true,
+        "processing": true,
+        "serverSide": true,
+        "order": [[0, "desc"]],
+        "lengthMenu": [[20, 50, 100], [20, 50, 100]],
+        "ajax": {
+            "url": "' . CFG_CMS_BASE_URL . 'API/vcsel-results.php",
+            "type": "POST",
+            "data": function(data){
+                data.mode = "getVcselResultsPage";
+            }
+        },
+        "columnDefs": [
+            { "orderable": false, "targets": [7, 8] }
+        ]
+    });
+});
+</script>';
 $common['security']->generate_page_rights(); //Generate user rights for page
 
 if($common['security']->check_rights(0)){
@@ -23,30 +46,24 @@ if($common['security']->check_rights(0)){
         
         echo $common['window']->begin('Calibration Results');
 
-            $headings=array('Date/Time','Tester','VCSEL S/N','Programmer S/N','Transmitter','Collector','Voltage','Notes','');
-            $heading_classes=array('','','','','','','','');
-            echo $common['table']->begin($headings,'full_table',$heading_classes);
-
-            // Get all notes from db
-            $results = $common['db']->pec('SELECT extVcselSerialNumber, dateTime, note FROM 2019_prod_7680_vcsel_results_notes ORDER BY dateTime',array(),'',array('extVcselSerialNumber', 'dateTime', 'note'));
-            $notes = array();
-            foreach($results as $row) {
-              if (isset($notes[$row['extVcselSerialNumber']])) {
-                $notes[$row['extVcselSerialNumber']] .= '<br/>';
-              } else {
-                $notes[$row['extVcselSerialNumber']] = '';
-              }
-              $notes[$row['extVcselSerialNumber']] .= '<strong>' . $row['dateTime'] . ':</strong> ' . $row['note'];
-            }
-
-            $results=$common['db']->pec('SELECT test_id, tester_name, date_time, programmer_serial_num, transmitter_val, collector_val, collector_voltage, vcselSerialNumber FROM 2019_prod_7680_vcsel_results',array(),'',array('test_id', 'tester_name', 'date_time', 'programmer_serial_num', 'transmitter_val', 'collector_val', 'collector_voltage', 'vcselSerialNumber'));
-            foreach($results as $row) {
-                $cols=array($row['date_time'],$row['tester_name'],$row['vcselSerialNumber'], $row['programmer_serial_num'],$row['transmitter_val'],$row['collector_val'],$row['collector_voltage'],(isset($notes[$row['vcselSerialNumber']])?$notes[$row['vcselSerialNumber']]:''),($row['vcselSerialNumber']!=0?'<a href="forms/notes.frm.php?vcselSerialNumber=' . $row['vcselSerialNumber'] . '">Add Note</a>':''));
-                $col_classes=array('','','','','','','','','center');
-                echo $common['table']->add_row($cols,$col_classes);
-            }
-
-            echo $common['table']->end();
+            ?>
+            <table id="vcsel_results_table" class="stripe">
+                <thead>
+                    <tr>
+                        <th>Date/Time</th>
+                        <th>Tester</th>
+                        <th>VCSEL S/N</th>
+                        <th>Programmer S/N</th>
+                        <th>Transmitter</th>
+                        <th>Collector</th>
+                        <th>Voltage</th>
+                        <th>Notes</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <?php
         echo $common['window']->end();
         
     require_once('common/includes/footer_inner.inc.php');
