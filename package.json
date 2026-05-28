@@ -1,43 +1,67 @@
 {
-  "name": "pertech-production",
+  "name": "pertech-vcsel",
   "version": "1.0.19",
-  "description": "Production Test Application",
+  "description": "Production VCSEL Test Application",
   "homepage": "https://productionapp.pertechindustries.com",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "start:mac": "./run-local-mac.sh",
-    "dist": "electron-builder --mac zip",
+    "dist": "electron-builder --mac dmg",
     "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "VCSEL",
+    "Pertech",
+    "Production",
+    "Test"
   ],
   "build": {
-    "appId": "com.pertechindustries.production",
-    "productName": "Pertech Production",
+    "appId": "com.pertechindustries.vcsel",
+    "productName": "Pertech-VCSEL",
     "files": [
-      "**/*",
+      "main.js",
+      "renderer.js",
+      "router.js",
+      "index.html",
+      "config.js",
+      "package.json",
+      "pages/**/*",
+      "lib/**/*",
+      "build/icons/**/*",
+      "!dashboard/**",
       "!dist/**",
+      "!node_modules/.cache/**",
+      "!*.zip",
+      "!*.dmg",
       "!*.log",
-      "!.php-sessions/**"
+      "!.git/**",
+      "!.php-sessions/**",
+      "!**/.DS_Store"
     ],
     "mac": {
       "icon": "./build/icons/icon.icns",
       "target": [
-        "zip"
-      ]
-    }
+        "dmg"
+      ],
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "identity": "Pertech Industries Inc. (ZC2GFZLK83)",
+      "notarize": false
+    },
+    "dmg": {
+      "sign": false
+    },
+    "afterSign": "scripts/notarize.js"
   },
-  "author": "Pertech <contact@pertechindustries.com>",
+  "author": "Pertech <development@pertechindustries.com>",
   "license": "CC0-1.0",
   "devDependencies": {
+    "@electron/notarize": "^3.1.1",
     "electron": "^11.5.0",
-    "electron-builder": "^22.14.13"
+    "electron-builder": "^26.8.1"
   },
   "dependencies": {
     "form-data": "^2.3.3",
