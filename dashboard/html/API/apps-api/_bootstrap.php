@@ -1,4 +1,6 @@
 <?php
+require_once(dirname(__DIR__) . '/_cors.php');
+
 function apps_api_scheme(){
     if(!empty($_SERVER['HTTP_X_FORWARDED_PROTO'])){
         return trim(explode(',', $_SERVER['HTTP_X_FORWARDED_PROTO'])[0]);
@@ -22,6 +24,8 @@ function apps_api_production_base_url(){
 }
 
 function apps_api_prepare_legacy_endpoint(){
+    pertech_api_cors_headers();
+
     if(getenv('PERTECH_PRODUCTION_BASE_URL') === false || getenv('PERTECH_PRODUCTION_BASE_URL') === ''){
         putenv('PERTECH_PRODUCTION_BASE_URL=' . apps_api_production_base_url());
     }
@@ -42,10 +46,7 @@ function apps_api_identifier($value, $fallback){
 }
 
 function apps_api_emit_json($payload){
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
-    header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-    header('Content-Type: application/json');
+    pertech_api_cors_headers('application/json');
     echo json_encode($payload);
 }
 ?>

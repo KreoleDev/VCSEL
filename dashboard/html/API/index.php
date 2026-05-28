@@ -1,8 +1,6 @@
 <?php
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: X-Requested-With, Content-Type');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Content-Type: application/json');
+require_once(__DIR__ . '/_cors.php');
+pertech_api_cors_headers('application/json');
 
 $basePath = dirname($_SERVER['SCRIPT_NAME']);
 $endpoints = array(

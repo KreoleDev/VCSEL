@@ -11,9 +11,8 @@
 *   2019.11.19  CP  Added in firmware and wide vault reporting for 7680
 */
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: X-Requested-With');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+require_once(__DIR__ . '/_cors.php');
+pertech_api_cors_headers('application/json');
 
 require_once(dirname(__DIR__) . '/production/lib/includes/includes.php');
 

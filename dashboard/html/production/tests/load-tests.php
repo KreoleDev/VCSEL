@@ -12,10 +12,8 @@
 *   2019.07.16  CP  Added burster home sensor (product ID 6 in DB)
 */
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: X-Requested-With');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Content-Type: application/javascript');
+require_once(dirname(__DIR__, 2) . '/API/_cors.php');
+pertech_api_cors_headers('application/javascript');
 
 require_once(dirname(__FILE__) .'/../lib/includes/includes.php');
 
