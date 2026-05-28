@@ -253,21 +253,22 @@ if($common['security']->check_rights(0)){
 		//Errors found
 		show($_POST,$errors,array('mode'=>'insert'));
 	    }else{
-		//Generate salt and pw hash
-		if(function_exists(mcrypt_create_iv)){ //Use better random number
-			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM); 
-		}else{ //Use universal code
-			$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-			$salt = '';
-			for ($i = 0; $i < 22; $i++){
-				$salt .= $characters[mt_rand(0, 61)];
-			}
-		}
-		$salt = base64_encode($salt);
-		$salt = str_replace('+', '.', $salt);
-		$db_pw= sha1($_POST['password1'] . $salt);
-		
-		//Add user (don't set date for password set so user must change password)
+        //Generate salt and pw hash
+        try {
+            $salt = random_bytes(22);
+        } catch (Exception $e) {
+            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            $salt = '';
+            for ($i = 0; $i < 22; $i++) {
+                $salt .= $characters[random_int(0, 61)];
+            }
+        }
+        
+        $salt = base64_encode($salt);
+        $salt = str_replace('+', '.', $salt);
+        $db_pw = sha1($_POST['password1'] . $salt);
+        		
+        		//Add user (don't set date for password set so user must change password)
 		$affected=$common['db']->pec('INSERT INTO core_users SET creation_date=NOW(), password_set_date=\'1970-01-01 00:00:00\', username=?, first_name=?, last_name=?, position_title=?, phone=?, email=?, password=?, account_expires=?, expiry_date=?, active=?, salt=?',
 		    array($_POST['username'],$_POST['first_name'],$_POST['last_name'],$_POST['position_title'],$common['format']->unformat_phone($_POST['phone']),$_POST['email'],$db_pw,$_POST['account_expires'],$common['format']->unformat_date($_POST['expiry_date']),$_POST['active'],$salt),
 		    'sssssssisis');
@@ -298,19 +299,20 @@ if($common['security']->check_rights(0)){
 		//Perform update
 		if(!empty($_POST['password1'])){
 		    //Password changed
-		    //Generate salt and pw hash
-		    if(function_exists(mcrypt_create_iv)){ //Use better random number
-				$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM); 
-			}else{ //Use universal code
-				$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-				$salt = '';
-				for ($i = 0; $i < 22; $i++){
-					$salt .= $characters[mt_rand(0, 61)];
-				}
-			}
-		    $salt = base64_encode($salt);
-		    $salt = str_replace('+', '.', $salt);
-		    $db_pw= sha1($_POST['password1'] . $salt);
+            //Generate salt and pw hash
+            try {
+                $salt = random_bytes(22);
+            } catch (Exception $e) {
+                $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                $salt = '';
+                for ($i = 0; $i < 22; $i++) {
+                    $salt .= $characters[random_int(0, 61)];
+                }
+            }
+            
+            $salt = base64_encode($salt);
+            $salt = str_replace('+', '.', $salt);
+            $db_pw = sha1($_POST['password1'] . $salt);
 		
 		    $affected=$common['db']->pec('UPDATE core_users SET username=?, first_name=?, last_name=?, position_title=?, phone=?, email=?, active=?, account_expires=?, expiry_date=?, password=?, salt=?, password_set_date=\'1970-01-01 00:00:00\' WHERE user_id=? LIMIT 1',
 			array($_POST['username'],$_POST['first_name'],$_POST['last_name'],$_POST['position_title'],$common['format']->unformat_phone($_POST['phone']),$_POST['email'],$_POST['active'],$_POST['account_expires'],$common['format']->unformat_date($_POST['expiry_date']),$db_pw,$salt,$_POST['user_id']),
@@ -431,20 +433,21 @@ if($common['security']->check_rights(0)){
 		reset_pw($_POST,$errors,array('user_id'=>$_POST['user_id'],'mode'=>'update_pw'));
 	    }else{
 		//Perform update
-		//Generate salt and pw hash
-		if(function_exists(mcrypt_create_iv)){ //Use better random number
-			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM); 
-		}else{ //Use universal code
-			$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-			$salt = '';
-			for ($i = 0; $i < 22; $i++){
-				$salt .= $characters[mt_rand(0, 61)];
-			}
-		}
-		$salt = base64_encode($salt);
-		$salt = str_replace('+', '.', $salt);
-		$db_pw= sha1($_POST['password1'] . $salt);
-		
+        //Generate salt and pw hash
+            try {
+                $salt = random_bytes(22);
+            } catch (Exception $e) {
+                $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                $salt = '';
+                for ($i = 0; $i < 22; $i++) {
+                    $salt .= $characters[random_int(0, 61)];
+                }
+            }
+            
+            $salt = base64_encode($salt);
+            $salt = str_replace('+', '.', $salt);
+            $db_pw = sha1($_POST['password1'] . $salt);
+        
 		$affected=$common['db']->pec('UPDATE core_users SET password=?, salt=?, password_set_date=\'1970-01-01 00:00:00\' WHERE user_id=? LIMIT 1',array($db_pw,$salt,$_POST['user_id']),'ssi');
 		
 		//Create log entry
