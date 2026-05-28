@@ -21,11 +21,22 @@ const mainMenuTemplate = [{
       }
     },{
     label:'Quit',
-    accellerator: process.platfrom == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+    accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
     click() {
       app.quit();
     }
   }]
+}, {
+  label: 'Edit',
+  submenu: [
+    { role: 'undo' },
+    { role: 'redo' },
+    { type: 'separator' },
+    { role: 'cut' },
+    { role: 'copy' },
+    { role: 'paste' },
+    { role: 'selectAll' }
+  ]
 }, {
   label: 'DevTools',
   submenu: [{

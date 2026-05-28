@@ -17,18 +17,21 @@ const loginPage = Vue.component('loginPage', function (resolve, reject) {
 
                 <div id="mainContent" class="loginContent">
                     <div id="loginPanel">
-                        <div id="loginLogo"></div>
-                        <h1>Production Login</h1>
+                        <div class="loginBrand">
+                            <div id="loginLogo" aria-label="Pertech"></div>
+                            <div class="loginProductType">Pertech VCSEL Production Test System</div>
+                        </div>
+                        <h1>Sign in</h1>
                         <form v-on:submit.prevent="login()">
                             <div class="loginField">
                                 <label>Username</label>
-                                <input type="text" v-model="username" ref="usernameInput" autocomplete="username">
+                                <input type="text" v-model="username" ref="usernameInput" autocomplete="username" placeholder="Enter username">
                             </div>
                             <div class="loginField">
                                 <label>Password</label>
-                                <input type="password" v-model="password" autocomplete="current-password">
+                                <input type="password" v-model="password" autocomplete="current-password" placeholder="Enter password">
                             </div>
-                            <button type="submit" v-bind:disabled="showLoading">Login</button>
+                            <button type="submit" v-bind:disabled="showLoading">Sign in</button>
                         </form>
                     </div>
                 </div>

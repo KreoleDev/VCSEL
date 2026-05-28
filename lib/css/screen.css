@@ -210,47 +210,106 @@ table.infoTable{
         display:flex;
         align-items:center;
         justify-content:center;
-        background:#E5EFF1;
+        background:
+            radial-gradient(circle at 18% 16%, rgba(63, 165, 76, 0.12), transparent 28%),
+            linear-gradient(135deg, #edf6f7 0%, #dfecef 48%, #f6fafb 100%);
+        font-family:Arial, Helvetica, sans-serif;
     }
         #loginPanel{
-            width:360px;
-            border:1px solid #789;
+            width:420px;
+            border:1px solid rgba(0, 73, 126, 0.18);
             border-radius:8px;
             background:#fff;
-            box-shadow:2px 2px 12px rgba(0,0,0,0.35);
-            padding:24px;
+            box-shadow:0 22px 55px rgba(0, 54, 92, 0.18);
+            box-sizing:border-box;
+            padding:34px 38px 38px 38px;
         }
+            .loginBrand{
+                display:flex;
+                align-items:flex-start;
+                flex-direction:column;
+                gap:8px;
+                padding-bottom:28px;
+                margin-bottom:28px;
+                border-bottom:1px solid #e1ebee;
+            }
             #loginLogo{
-                height:58px;
-                background-image:url(../images/pertech.png);
+                width:213px;
+                max-width:100%;
+                height:70px;
+                background-image:url(../../build/icons/fullicon.png);
                 background-size:contain;
                 background-repeat:no-repeat;
-                background-position:center center;
-                margin-bottom:12px;
+                background-position:left center;
             }
+                .loginProductType{
+                    color:#4c6470;
+                    font-size:13px;
+                    font-weight:600;
+                    line-height:18px;
+                    text-transform:uppercase;
+                }
             #loginPanel h1{
-                padding:0 0 18px 0;
-                text-align:center;
+                color:#142c3a;
+                font-family:Arial, Helvetica, sans-serif;
+                font-size:28px;
+                font-weight:700;
+                line-height:34px;
+                padding:0 0 22px 0;
+                text-align:left;
             }
             .loginField{
-                margin-bottom:14px;
+                margin-bottom:18px;
             }
                 .loginField label{
                     display:block;
+                    color:#263b47;
+                    font-size:14px;
                     font-weight:bold;
-                    margin-bottom:6px;
+                    line-height:20px;
+                    margin-bottom:8px;
                 }
                 .loginField input{
                     width:100%;
                     box-sizing:border-box;
-                    font-size:20px;
-                    line-height:32px;
-                    padding:2px 8px;
+                    border:1px solid #b7c7cf;
+                    border-radius:6px;
+                    color:#102c3b;
+                    font-size:18px;
+                    line-height:24px;
+                    padding:12px 13px;
+                    transition:border-color 0.18s ease, box-shadow 0.18s ease;
+                }
+                .loginField input:focus{
+                    border-color:#00497e;
+                    box-shadow:0 0 0 3px rgba(0, 73, 126, 0.14);
+                    outline:none;
                 }
             #loginPanel button{
                 width:100%;
-                line-height:34px;
+                border:0;
+                border-radius:6px;
+                background:#00497e;
+                color:#fff;
+                cursor:pointer;
+                font-family:Arial, Helvetica, sans-serif;
                 font-size:18px;
+                font-weight:700;
+                line-height:24px;
+                margin-top:6px;
+                padding:13px 16px;
+                transition:background-color 0.18s ease, transform 0.18s ease;
+            }
+            #loginPanel button:hover{
+                background:#00639d;
+            }
+            #loginPanel button:active{
+                transform:translateY(1px);
+            }
+            #loginPanel button:disabled{
+                background:#8aa4b4;
+                cursor:default;
+                transform:none;
             }
 
     .productContainer{
