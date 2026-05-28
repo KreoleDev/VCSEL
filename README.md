@@ -1,6 +1,12 @@
 # Pertech Production App
 
-Electron production test app with the local PHP API bundled in this project.
+Electron production test app that uses the Pertech cloud API.
+
+Cloud API URL:
+
+```text
+https://vcsel.pertechindustries.com/API/apps-api/
+```
 
 ## Run on macOS
 
@@ -8,11 +14,3 @@ Electron production test app with the local PHP API bundled in this project.
 npm install
 npm run start:mac
 ```
-
-## Run only the local API
-
-```sh
-npm run start:api
-```
-
-Local API URL: `http://127.0.0.1:8010/production/`

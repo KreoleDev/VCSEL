@@ -6,7 +6,6 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "start:api": "./start-local-api.sh",
     "start:mac": "./run-local-mac.sh",
     "dist": "build",
     "postinstall": "electron-builder install-app-deps"
@@ -24,16 +23,8 @@
     "files": [
       "**/*",
       "!dist/**",
-      "!local-api/**",
       "!*.log",
-      "!.php-sessions/**",
-      "!local-api/production/uploads/**"
-    ],
-    "extraResources": [
-      {
-        "from": "local-api",
-        "to": "local-api"
-      }
+      "!.php-sessions/**"
     ],
     "mac": {
       "icon": "./build/icons/icon.icns",

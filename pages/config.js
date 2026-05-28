@@ -22,7 +22,7 @@ window.configPage = Vue.component('configPage', function (resolve, reject) {
             save: function() {
                 var self = this;
                 console.log('save');
-                CFG_DATA_SERVICE_URL = self.serverIP;
+                CFG_DATA_SERVICE_URL = self.serverIP.replace(/\/?$/, '/');
                 localStorage.setItem("cfgDataServiceURL", CFG_DATA_SERVICE_URL);
                 router.push('/');
             }

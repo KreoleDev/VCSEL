@@ -4,19 +4,6 @@ npm install
 npm run start:mac
 
 
-Run only the local API
+Cloud API used by the app
 
-npm run start:api
-
-
-Local API URL
-
-http://127.0.0.1:8010/production/
-
-
-Database defaults used by the local API
-
-host: localhost
-database: pertech
-user: prinet
-password: Pri7680
+https://vcsel.pertechindustries.com/API/apps-api/

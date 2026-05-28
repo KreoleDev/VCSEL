@@ -72,13 +72,14 @@ window.addEventListener('load', function() {
             });
 
             //Load from config
+            var savedDataServiceURL = localStorage.getItem("cfgDataServiceURL");
             if (
-                localStorage.getItem("cfgDataServiceURL") === null ||
-                localStorage.getItem("cfgDataServiceURL") === CFG_LEGACY_DATA_SERVICE_URL
+                savedDataServiceURL === null ||
+                (typeof CFG_LEGACY_DATA_SERVICE_URLS !== 'undefined' && CFG_LEGACY_DATA_SERVICE_URLS.indexOf(savedDataServiceURL) >= 0)
             ) {
                 localStorage.setItem("cfgDataServiceURL", CFG_DATA_SERVICE_URL);
             } else {
-                CFG_DATA_SERVICE_URL = localStorage.getItem("cfgDataServiceURL");
+                CFG_DATA_SERVICE_URL = savedDataServiceURL;
             }
         },
         methods: {
