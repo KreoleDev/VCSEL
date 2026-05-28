@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "start:mac": "./run-local-mac.sh",
-    "dist": "build",
+    "dist": "electron-builder --mac zip",
     "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
@@ -29,7 +29,6 @@
     "mac": {
       "icon": "./build/icons/icon.icns",
       "target": [
-        "dmg",
         "zip"
       ]
     }
