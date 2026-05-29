@@ -59,7 +59,8 @@ window.addEventListener('load', function() {
             vcselCameraBrightness: 0,
             vcselCameraArea: 0,
             vcselCameraReady: false,
-            vcselCameraSavedMessage: ''
+            vcselCameraSavedMessage: '',
+            vcselCameraSavedMessageTimer: null
         },
         mounted: function() {
             var self = this;
@@ -119,6 +120,11 @@ window.addEventListener('load', function() {
                 this.isAuthenticated = false;
                 this.currentUser = '';
                 this.currentUserId = '';
+                this.clearVcselCameraSavedMessage();
+                if(this.vcselCamera) {
+                    this.vcselCamera.resetSavedSerial();
+                    this.vcselCamera.disarm();
+                }
                 this.tests = [];
                 this.testerName = '';
                 this.showError = false;
@@ -197,7 +203,7 @@ window.addEventListener('load', function() {
                             self.vcselCameraStatus = status;
                         },
                         onSaved: function(serial) {
-                            self.vcselCameraSavedMessage = 'Saved Serial ' + serial;
+                            self.setVcselCameraSavedMessage('Saved Serial ' + serial);
                         },
                         onMeasurement: function(measurement) {
                             self.vcselCameraBrightness = measurement.brightness;
@@ -206,6 +212,9 @@ window.addEventListener('load', function() {
                             if(measurement.ready && self.showResultText) {
                                 self.captureVcselCameraResult(self.resultText);
                             }
+                        },
+                        onSaveMeasurement: function(measurement) {
+                            self.saveCameraTestingMeasurement(measurement);
                         }
                     });
                 }
@@ -217,7 +226,7 @@ window.addEventListener('load', function() {
             },
             //------------------------------------------------------------------------------------------------------
             armVcselCamera: function() {
-                this.vcselCameraSavedMessage = '';
+                this.clearVcselCameraSavedMessage();
                 if(this.vcselCamera) {
                     this.vcselCamera.arm();
                 }
@@ -226,6 +235,52 @@ window.addEventListener('load', function() {
             captureVcselCameraResult: function(resultText) {
                 if(this.vcselCamera) {
                     this.vcselCamera.captureSerialResult(resultText);
+                }
+            },
+            //------------------------------------------------------------------------------------------------------
+            saveCameraTestingMeasurement: function(measurement) {
+                var self = this;
+                var connectionInst = new serverRequest(CFG_DATA_SERVICE_URL);
+
+                connectionInst.postToServer({
+                    mode: 'saveCameraTesting',
+                    timestamp: measurement.timestamp,
+                    brightness: measurement.brightness,
+                    area: measurement.area,
+                    lot_number: measurement.lot_number || 'LOT0000',
+                    serial_number: measurement.serial_number,
+                    acquired: measurement.acquired || 'Auto',
+                    tester_name: self.testerName,
+                    logged_in_user_id: self.currentUserId,
+                    logged_in_username: self.currentUser
+                }, 'camera-testing/').then(function(response) {
+                    if(response && response.success) {
+                        self.setVcselCameraSavedMessage('Saved Serial ' + measurement.serial_number + ' to dashboard');
+                    } else {
+                        self.vcselCameraStatus = response && response.error ? response.error : 'Camera data save failed';
+                    }
+                }, function() {
+                    self.vcselCameraStatus = 'Cannot save camera data to server';
+                });
+            },
+            //------------------------------------------------------------------------------------------------------
+            setVcselCameraSavedMessage: function(message) {
+                var self = this;
+                self.vcselCameraSavedMessage = message;
+                if(self.vcselCameraSavedMessageTimer) {
+                    clearTimeout(self.vcselCameraSavedMessageTimer);
+                }
+                self.vcselCameraSavedMessageTimer = setTimeout(function() {
+                    self.vcselCameraSavedMessage = '';
+                    self.vcselCameraSavedMessageTimer = null;
+                }, 3000);
+            },
+            //------------------------------------------------------------------------------------------------------
+            clearVcselCameraSavedMessage: function() {
+                this.vcselCameraSavedMessage = '';
+                if(this.vcselCameraSavedMessageTimer) {
+                    clearTimeout(this.vcselCameraSavedMessageTimer);
+                    this.vcselCameraSavedMessageTimer = null;
                 }
             },
 
