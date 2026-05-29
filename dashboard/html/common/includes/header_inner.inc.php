@@ -88,27 +88,74 @@ if(isset($server_file_check)){
 		return false;
 	    });
 	    //---------------------------------------------------------------------------//
+
+	    //Profile menu
+	    //---------------------------------------------------------------------------//
+	    $('#profile_menu_btn').click(function(){
+		$('#profile_menu').toggle();
+		$(this).toggleClass('active');
+		return false;
+	    });
+
+	    $(document).click(function(event){
+		if(!$(event.target).closest('#profile_actions').length){
+		    $('#profile_menu').hide();
+		    $('#profile_menu_btn').removeClass('active');
+		}
+	    });
+	    //---------------------------------------------------------------------------//
 	});
     </script>
     <?php require('common/includes/js.inc.php'); ?>
     <?=isset($additional_head)?$additional_head:''; ?>
 </head>
-<body<?=isset($body_class) && $body_class!==''?' class="' . $body_class . '"':''; ?>>
+<?php
+$body_classes=array();
+if(isset($body_class) && $body_class!==''){
+    $body_classes[]=$body_class;
+}
+if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){
+    $body_classes[]='vcsel_app_user';
+}
+$profile_name_parts=preg_split('/\s+/',trim($_SESSION['user']));
+$profile_initials='';
+if(!empty($profile_name_parts[0])){
+    $profile_initials.=substr($profile_name_parts[0],0,1);
+}
+if(count($profile_name_parts)>1 && !empty($profile_name_parts[count($profile_name_parts)-1])){
+    $profile_initials.=substr($profile_name_parts[count($profile_name_parts)-1],0,1);
+}
+$profile_initials=strtoupper($profile_initials);
+?>
+<body<?=!empty($body_classes)?' class="' . implode(' ',$body_classes) . '"':''; ?>>
     <header>
-        <a id="logo" href="<?=CFG_CMS_BASE_URL; ?>index.php" title="Home"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/login_logo.png?v=20260529" alt="<?=CFG_CMS_NAME; ?>" /></a>
+        <a id="logo" href="<?=isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']?CFG_CMS_BASE_URL . 'modules/addon/7001_vcsel_results/index.php?mod_id=7001':CFG_CMS_BASE_URL . 'index.php'; ?>" title="Home"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/login_logo.png?v=20260529" alt="<?=CFG_CMS_NAME; ?>" /></a>
 	
-	<div id="header_options">
-	    <a id="main_menu_btn" href="" title="Main Menu"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/header_menu.png" alt="Main Menu" /></a>
-	    <a href="<?=CFG_CMS_BASE_URL; ?>index.php?logoff=true" title="Log Out"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/header_logout.png" alt="Log Out" /></a>
-	</div>
+	<?php if(!isset($_SESSION['is_vcsel_app_user']) || !$_SESSION['is_vcsel_app_user']){ ?>
+	    <div id="header_options">
+		<a id="main_menu_btn" href="" title="Main Menu"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/header_menu.png" alt="Main Menu" /></a>
+	    </div>
+	<?php } ?>
 	
-	<div id="login_info">
-	    <ul>
-		<li><?=$_SESSION['user']; ?></li>
-		<li><?=$_SESSION['site_name']; ?></li>
+	<div id="profile_actions">
+	    <?php if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){ ?>
+		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a>
+		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="VCSEL App">VCSEL App</a>
+	    <?php } ?>
+	    <button id="profile_menu_btn" type="button">
+		<span class="profile_initials"><?=htmlspecialchars($profile_initials,ENT_QUOTES); ?></span>
+	    </button>
+	    <ul id="profile_menu">
+		<li class="profile_menu_identity">
+		    <strong><?=$_SESSION['user']; ?></strong>
+		    <span><?=$_SESSION['site_name']; ?></span>
+		</li>
+		<li><a href="<?=CFG_CMS_BASE_URL; ?>modules/core/1003_account_settings/index.php?mod_id=1003">Account Settings</a></li>
+		<li><a href="<?=CFG_CMS_BASE_URL; ?>index.php?logoff=true">Log Out</a></li>
 	    </ul>
 	</div>
     </header>
+    <?php if(!isset($_SESSION['is_vcsel_app_user']) || !$_SESSION['is_vcsel_app_user']){ ?>
     <div id="main_menu">
 	<?php
 	//Find all panels
@@ -116,11 +163,17 @@ if(isset($server_file_check)){
 	foreach($results as $row){
 	    if(isset($_SESSION['modules'][$row['panel_id']])){
 		//module exist for user in this panel
-		echo '<dl><dt>' . $row['title'] . '</dt>';
-		    foreach($_SESSION['modules'][$row['panel_id']] as $key=>$value){
-			echo '<dd><a href="' . CFG_CMS_BASE_URL . $_SESSION['modules'][$row['panel_id']][$key]['path'] . '?mod_id=' . $_SESSION['modules'][$row['panel_id']][$key]['id'] . '" title="' . $_SESSION['modules'][$row['panel_id']][$key]['title'] . '">' . $_SESSION['modules'][$row['panel_id']][$key]['title'] . '</a></dd>';
+		$module_links='';
+		foreach($_SESSION['modules'][$row['panel_id']] as $key=>$value){
+		    $module_title=$_SESSION['modules'][$row['panel_id']][$key]['title'];
+		    if(in_array($module_title,array('Dashboard','Account Settings'))){
+			continue;
 		    }
-		echo '</dl>';
+		    $module_links.='<dd><a href="' . CFG_CMS_BASE_URL . $_SESSION['modules'][$row['panel_id']][$key]['path'] . '?mod_id=' . $_SESSION['modules'][$row['panel_id']][$key]['id'] . '" title="' . $module_title . '">' . $module_title . '</a></dd>';
+		}
+		if(!empty($module_links)){
+		    echo '<dl><dt>' . $row['title'] . '</dt>' . $module_links . '</dl>';
+		}
 	    }
 	}
     $vcsel_app_active=basename($_SERVER['SCRIPT_NAME'])=='vcsel_app.php'?' class="active"':'';
@@ -129,5 +182,6 @@ if(isset($server_file_check)){
     echo '</dl>';
 	?>
     </div>
+    <?php } ?>
     <div id="main_content">
 	<?=isset($_REQUEST['msg'])?'<div id="msg" ' . (isset($_REQUEST['msg_state'])?'class="' . $_REQUEST['msg_state'] . '"':'') . '>' . $_REQUEST['msg'] . '</div>':'';?>

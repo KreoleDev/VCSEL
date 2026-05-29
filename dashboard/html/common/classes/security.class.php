@@ -176,6 +176,17 @@ class security{
             //-------------------------------------------------------------------//
             //Store user rights in session
             $modules=array();
+            $_SESSION['is_vcsel_app_user']=false;
+
+            $vcsel_app_user=$site_db->pec(
+                'SELECT count(*) FROM core_user_group_lookup, core_groups WHERE ext_group_id=group_id AND ext_user_id=? AND name=? LIMIT 1',
+                array($user_id,'VCSEL App Users'),
+                'is',
+                array('count')
+            );
+            if(!empty($vcsel_app_user) && (int)$vcsel_app_user[0]['count']>0){
+                $_SESSION['is_vcsel_app_user']=true;
+            }
             
             //check to see if user is admin (access to all modules)
             $admin_info=$site_db->pec('SELECT count(*) FROM core_user_group_lookup WHERE ext_user_id=? AND ext_group_id=2 LIMIT 1',array($user_id),'i',array('count'));

@@ -91,6 +91,10 @@ function api_vcsel_results_user_is_vcsel_app_user($userId){
         return false;
     }
 
+    if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){
+        return true;
+    }
+
     $db = api_vcsel_results_db();
     $rows = $db->pec(
         'SELECT count(*) FROM core_user_group_lookup, core_groups WHERE ext_group_id=group_id AND ext_user_id=? AND name=? LIMIT 1',
@@ -104,12 +108,11 @@ function api_vcsel_results_user_is_vcsel_app_user($userId){
 
 function api_vcsel_results_user_filter(){
     $userId = api_vcsel_results_session_user_id();
-    if(
-        $userId <= 0 ||
-        !api_vcsel_results_has_user_column() ||
-        api_vcsel_results_user_is_admin($userId) ||
-        !api_vcsel_results_user_is_vcsel_app_user($userId)
-    ){
+    if($userId <= 0){
+        return array('clauses' => array('1=0'), 'params' => array(), 'types' => '');
+    }
+
+    if(!api_vcsel_results_has_user_column() || !api_vcsel_results_user_is_vcsel_app_user($userId)){
         return array('clauses' => array(), 'params' => array(), 'types' => '');
     }
 

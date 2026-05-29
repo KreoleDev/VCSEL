@@ -7,7 +7,23 @@
 *   2019.01.09  CP  Moved defines to here
 */
 
-if(!isset($_SESSION)){ session_start(); }
+if(!isset($_SESSION)){
+    $session_save_path=getenv('PERTECH_SESSION_SAVE_PATH');
+    if(($session_save_path===false || $session_save_path==='') && PHP_SAPI==='cli-server'){
+        $default_session_path=session_save_path();
+        if(empty($default_session_path) || !is_dir($default_session_path) || !is_writable($default_session_path)){
+            $session_save_path=sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'pertech-php-sessions';
+        }
+    }
+    if($session_save_path!==false && $session_save_path!==''){
+        if(!is_dir($session_save_path)){
+            mkdir($session_save_path,0777,true);
+        }
+        session_save_path($session_save_path);
+    }
+    session_set_cookie_params(28800);
+    session_start();
+}
 
 $uploadPath = getenv('PERTECH_PRODUCTION_UPLOAD_PATH');
 if ($uploadPath === false || $uploadPath === '') {

@@ -73,6 +73,7 @@ function login(){
 //--------------------------------------------------------------------------------------------------------------//
 function load_landing(){
     global $common;
+
     //Check to see if password has expired
     if(isset($_SESSION['local_password_expire_days'])){
         //Password can expire
@@ -84,12 +85,12 @@ function load_landing(){
             die();
         }else{
             //Password not expired
-            header('location: modules/core/1000_dashboard/index.php?mod_id=1000');
+            header('location: ' . ((isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user'])?'modules/addon/7001_vcsel_results/index.php?mod_id=7001':'modules/core/1000_dashboard/index.php?mod_id=1000'));
             die();
         }
     }else{
         //Using ldap or passwords don't expire
-        header('location: modules/core/1000_dashboard/index.php?mod_id=1000');
+        header('location: ' . ((isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user'])?'modules/addon/7001_vcsel_results/index.php?mod_id=7001':'modules/core/1000_dashboard/index.php?mod_id=1000'));
         die();
     }
 }
