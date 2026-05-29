@@ -596,13 +596,21 @@ footer{
         border-radius:8px;
         color:#07578e;
         display:flex;
-        font-size:24px;
-        font-weight:bold;
         height:58px;
         justify-content:center;
         margin-bottom:20px;
         width:58px;
     }
+        .app_download_icon svg{
+            display:block;
+            fill:currentColor;
+            height:34px;
+            width:34px;
+        }
+        .app_download_icon.platform_linux svg{
+            height:38px;
+            width:38px;
+        }
     .app_download_card h3{
         color:#123040;
         font-size:24px;
