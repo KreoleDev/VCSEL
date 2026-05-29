@@ -8,6 +8,7 @@ function api_vcsel_results_db(){
 
 function api_vcsel_results_get(){
     $db = api_vcsel_results_db();
+    $filter = api_vcsel_results_build_where('');
 
     $noteRows = $db->pec(
         'SELECT extVcselSerialNumber, dateTime, note FROM 2019_prod_7680_vcsel_results_notes ORDER BY dateTime',
@@ -29,9 +30,9 @@ function api_vcsel_results_get(){
     }
 
     $resultRows = $db->pec(
-        'SELECT test_id, tester_name, date_time, programmer_serial_num, transmitter_val, collector_val, collector_voltage, vcselSerialNumber FROM 2019_prod_7680_vcsel_results',
-        array(),
-        '',
+        'SELECT test_id, tester_name, date_time, programmer_serial_num, transmitter_val, collector_val, collector_voltage, vcselSerialNumber FROM 2019_prod_7680_vcsel_results' . $filter['where'],
+        $filter['params'],
+        $filter['types'],
         array('test_id', 'tester_name', 'date_time', 'programmer_serial_num', 'transmitter_val', 'collector_val', 'collector_voltage', 'vcselSerialNumber')
     );
 
@@ -45,6 +46,98 @@ function api_vcsel_results_get(){
 
 function api_vcsel_results_html($value){
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+
+function api_vcsel_results_has_user_column(){
+    static $hasColumn = null;
+    if($hasColumn !== null){
+        return $hasColumn;
+    }
+
+    $db = api_vcsel_results_db();
+    $rows = $db->pec(
+        'SELECT count(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=? AND COLUMN_NAME=?',
+        array('2019_prod_7680_vcsel_results', 'ext_user_id'),
+        'ss',
+        array('count')
+    );
+    $hasColumn = !empty($rows) && (int)$rows[0]['count'] > 0;
+
+    return $hasColumn;
+}
+
+function api_vcsel_results_session_user_id(){
+    return isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+}
+
+function api_vcsel_results_user_is_admin($userId){
+    if($userId <= 0){
+        return false;
+    }
+
+    $db = api_vcsel_results_db();
+    $rows = $db->pec(
+        'SELECT count(*) FROM core_user_group_lookup WHERE ext_user_id=? AND ext_group_id=2 LIMIT 1',
+        array($userId),
+        'i',
+        array('count')
+    );
+
+    return !empty($rows) && (int)$rows[0]['count'] > 0;
+}
+
+function api_vcsel_results_user_is_vcsel_app_user($userId){
+    if($userId <= 0){
+        return false;
+    }
+
+    $db = api_vcsel_results_db();
+    $rows = $db->pec(
+        'SELECT count(*) FROM core_user_group_lookup, core_groups WHERE ext_group_id=group_id AND ext_user_id=? AND name=? LIMIT 1',
+        array($userId, 'VCSEL App Users'),
+        'is',
+        array('count')
+    );
+
+    return !empty($rows) && (int)$rows[0]['count'] > 0;
+}
+
+function api_vcsel_results_user_filter(){
+    $userId = api_vcsel_results_session_user_id();
+    if(
+        $userId <= 0 ||
+        !api_vcsel_results_has_user_column() ||
+        api_vcsel_results_user_is_admin($userId) ||
+        !api_vcsel_results_user_is_vcsel_app_user($userId)
+    ){
+        return array('clauses' => array(), 'params' => array(), 'types' => '');
+    }
+
+    return array(
+        'clauses' => array('ext_user_id=?'),
+        'params' => array($userId),
+        'types' => 'i'
+    );
+}
+
+function api_vcsel_results_build_where($search=''){
+    $filter = api_vcsel_results_user_filter();
+    $clauses = $filter['clauses'];
+    $params = $filter['params'];
+    $types = $filter['types'];
+
+    if($search !== ''){
+        $clauses[] = '(tester_name LIKE ? OR date_time LIKE ? OR programmer_serial_num LIKE ? OR vcselSerialNumber LIKE ? OR transmitter_val LIKE ? OR collector_val LIKE ? OR collector_voltage LIKE ?)';
+        $like = '%' . $search . '%';
+        $params = array_merge($params, array($like, $like, $like, $like, $like, $like, $like));
+        $types .= 'sssssss';
+    }
+
+    return array(
+        'where' => !empty($clauses) ? ' WHERE ' . implode(' AND ', $clauses) : '',
+        'params' => $params,
+        'types' => $types
+    );
 }
 
 function api_vcsel_results_page($request){
@@ -72,29 +165,22 @@ function api_vcsel_results_page($request){
     $orderDir = isset($request['order'][0]['dir']) && strtolower($request['order'][0]['dir']) === 'asc' ? 'ASC' : 'DESC';
 
     $search = isset($request['search']['value']) ? trim($request['search']['value']) : '';
-    $where = '';
-    $params = array();
-    $types = '';
-    if($search !== ''){
-        $where = ' WHERE tester_name LIKE ? OR date_time LIKE ? OR programmer_serial_num LIKE ? OR vcselSerialNumber LIKE ? OR transmitter_val LIKE ? OR collector_val LIKE ? OR collector_voltage LIKE ?';
-        $like = '%' . $search . '%';
-        $params = array($like, $like, $like, $like, $like, $like, $like);
-        $types = 'sssssss';
-    }
+    $baseFilter = api_vcsel_results_build_where('');
+    $searchFilter = api_vcsel_results_build_where($search);
 
     $totalRows = $db->pec(
-        'SELECT count(*) FROM 2019_prod_7680_vcsel_results',
-        array(),
-        '',
+        'SELECT count(*) FROM 2019_prod_7680_vcsel_results' . $baseFilter['where'],
+        $baseFilter['params'],
+        $baseFilter['types'],
         array('count')
     );
     $recordsTotal = isset($totalRows[0]['count']) ? (int)$totalRows[0]['count'] : 0;
 
-    if($where !== ''){
+    if($search !== ''){
         $filteredRows = $db->pec(
-            'SELECT count(*) FROM 2019_prod_7680_vcsel_results' . $where,
-            $params,
-            $types,
+            'SELECT count(*) FROM 2019_prod_7680_vcsel_results' . $searchFilter['where'],
+            $searchFilter['params'],
+            $searchFilter['types'],
             array('count')
         );
         $recordsFiltered = isset($filteredRows[0]['count']) ? (int)$filteredRows[0]['count'] : 0;
@@ -103,9 +189,9 @@ function api_vcsel_results_page($request){
     }
 
     $results = $db->pec(
-        'SELECT test_id, tester_name, date_time, programmer_serial_num, transmitter_val, collector_val, collector_voltage, vcselSerialNumber FROM 2019_prod_7680_vcsel_results' . $where . ' ORDER BY ' . $orderColumn . ' ' . $orderDir . ' LIMIT ' . $start . ', ' . $length,
-        $params,
-        $types,
+        'SELECT test_id, tester_name, date_time, programmer_serial_num, transmitter_val, collector_val, collector_voltage, vcselSerialNumber FROM 2019_prod_7680_vcsel_results' . $searchFilter['where'] . ' ORDER BY ' . $orderColumn . ' ' . $orderDir . ' LIMIT ' . $start . ', ' . $length,
+        $searchFilter['params'],
+        $searchFilter['types'],
         array('test_id', 'tester_name', 'date_time', 'programmer_serial_num', 'transmitter_val', 'collector_val', 'collector_voltage', 'vcselSerialNumber')
     );
 

@@ -11,8 +11,9 @@ $usernameColumn = apps_api_identifier(getenv('PERTECH_AUTH_USERNAME_COLUMN'), 'u
 $passwordColumn = apps_api_identifier(getenv('PERTECH_AUTH_PASSWORD_COLUMN'), 'password');
 $displayNameColumn = apps_api_identifier(getenv('PERTECH_AUTH_DISPLAY_NAME_COLUMN'), '');
 $activeColumn = apps_api_identifier(getenv('PERTECH_AUTH_ACTIVE_COLUMN'), 'active');
+$userIdColumn = apps_api_identifier(getenv('PERTECH_AUTH_USER_ID_COLUMN'), 'user_id');
 
-$fields = array($passwordColumn, $activeColumn);
+$fields = array($userIdColumn, $usernameColumn, $passwordColumn, $activeColumn);
 if($displayNameColumn !== ''){
     $fields[] = $displayNameColumn;
 }else{
@@ -20,6 +21,7 @@ if($displayNameColumn !== ''){
     $fields[] = 'last_name';
 }
 $fields[] = 'salt';
+$fields = array_values(array_unique($fields));
 
 $db = api_db_gateway_instance();
 $rows = $db->pec(
@@ -31,6 +33,8 @@ $rows = $db->pec(
 
 $authenticated = false;
 $displayName = '';
+$authenticatedUserId = 0;
+$authenticatedUsername = '';
 if(!empty($rows)){
     $row = $rows[0];
     $active = !isset($row[$activeColumn]) || (int)$row[$activeColumn] === 1;
@@ -40,6 +44,8 @@ if(!empty($rows)){
 
     if($active && $passwordMatches){
         $authenticated = true;
+        $authenticatedUserId = isset($row[$userIdColumn]) ? (int)$row[$userIdColumn] : 0;
+        $authenticatedUsername = isset($row[$usernameColumn]) ? $row[$usernameColumn] : $usernameValue;
         if($displayNameColumn !== ''){
             $displayName = isset($row[$displayNameColumn]) ? $row[$displayNameColumn] : $usernameValue;
         }else{
@@ -53,6 +59,8 @@ if(!empty($rows)){
 
 apps_api_emit_json(array(
     'authenticated' => $authenticated,
-    'display_name' => $authenticated ? $displayName : ''
+    'display_name' => $authenticated ? $displayName : '',
+    'user_id' => $authenticated ? $authenticatedUserId : 0,
+    'username' => $authenticated ? $authenticatedUsername : ''
 ));
 ?>
