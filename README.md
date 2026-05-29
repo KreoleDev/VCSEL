@@ -14,3 +14,8 @@ https://vcsel.pertechindustries.com/API/apps-api/
 npm install
 npm run start:mac
 ```
+
+
+for dmg run
+./build-production-mac.sh
+
