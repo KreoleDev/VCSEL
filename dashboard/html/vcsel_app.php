@@ -91,18 +91,15 @@ require_once('common/includes/header_inner.inc.php');
         <?php
         foreach($platforms as $platform){
             $download=vcsel_app_download($platform['key'],$platform['extensions']);
-            echo '<div class="app_download_card">';
-                echo '<div class="app_download_icon platform_' . $platform['key'] . '">' . vcsel_app_logo($platform['key']) . '</div>';
-                echo '<h3>' . $platform['title'] . '</h3>';
-                echo '<p>' . $platform['description'] . '</p>';
-                if($download){
-                    echo '<span>' . $download['name'] . (!empty($download['size'])?' &bull; ' . vcsel_app_size($download['size']):'') . '</span>';
-                    echo '<a href="' . $download['url'] . '" download>Download</a>';
-                }else{
-                    echo '<span>No installer uploaded yet</span>';
-                    echo '<button type="button" disabled>Unavailable</button>';
-                }
-            echo '</div>';
+                echo '<div class="app_download_card">';
+                    echo '<div class="app_download_icon platform_' . $platform['key'] . '">' . vcsel_app_logo($platform['key']) . '</div>';
+                    echo '<h3>' . $platform['title'] . '</h3>';
+                    if($download){
+                        echo '<a href="' . $download['url'] . '" download>Download</a>';
+                    }else{
+                        echo '<button type="button" disabled>Unavailable</button>';
+                    }
+                echo '</div>';
         }
         ?>
     </div>
