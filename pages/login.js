@@ -77,11 +77,19 @@ const loginPage = Vue.component('loginPage', function (resolve, reject) {
                     }, 'login/').then((response) => {
                         if(response && response.authenticated == true) {
                             var displayName = response.display_name || self.username;
+                            var username = response.username || self.username;
+                            var userId = response.user_id !== undefined && response.user_id !== null ? response.user_id : '';
+                            if(userId === '') {
+                                self.showLoginError('Login succeeded but the server did not return a user ID.');
+                                return;
+                            }
                             sessionStorage.setItem('pertechAuthenticated', '1');
-                            sessionStorage.setItem('pertechUsername', self.username);
+                            sessionStorage.setItem('pertechUsername', username);
                             sessionStorage.setItem('pertechDisplayName', displayName);
+                            sessionStorage.setItem('pertechUserId', userId);
                             window.app.isAuthenticated = true;
-                            window.app.currentUser = self.username;
+                            window.app.currentUser = username;
+                            window.app.currentUserId = userId;
                             aniHideLoading().then(() => {
                                 self.showLoading = false;
                                 self.$router.push('/');

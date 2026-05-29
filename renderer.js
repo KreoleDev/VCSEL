@@ -52,7 +52,8 @@ window.addEventListener('load', function() {
             dbTestID: 0,
             allowBack: true,
             isAuthenticated: false,
-            currentUser: ''
+            currentUser: '',
+            currentUserId: ''
         },
         mounted: function() {
             var self = this;
@@ -66,6 +67,7 @@ window.addEventListener('load', function() {
             self.genericUSBDevice = new genericUSBDevice();
             self.isAuthenticated = sessionStorage.getItem('pertechAuthenticated') === '1';
             self.currentUser = sessionStorage.getItem('pertechUsername') || '';
+            self.currentUserId = sessionStorage.getItem('pertechUserId') || '';
 
             ipcRenderer.on('navigate', (e, routePath) => {
                 router.push(routePath)
@@ -88,8 +90,10 @@ window.addEventListener('load', function() {
                 sessionStorage.removeItem('pertechAuthenticated');
                 sessionStorage.removeItem('pertechUsername');
                 sessionStorage.removeItem('pertechDisplayName');
+                sessionStorage.removeItem('pertechUserId');
                 this.isAuthenticated = false;
                 this.currentUser = '';
+                this.currentUserId = '';
                 this.tests = [];
                 this.testerName = '';
                 this.showError = false;

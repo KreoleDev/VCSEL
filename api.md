@@ -103,7 +103,9 @@ Response:
 ```json
 {
   "authenticated": true,
-  "display_name": "Operator Name"
+  "display_name": "Operator Name",
+  "user_id": 123,
+  "username": "operator"
 }
 ```
 
@@ -671,6 +673,8 @@ Request:
 ```json
 {
   "mode": "saveVcselResults",
+  "logged_in_user_id": 123,
+  "logged_in_username": "operator",
   "tester_name": "Operator Name",
   "programmer_serial_num": "PROGRAM1",
   "set_transmitter_val": 20,
@@ -724,7 +728,8 @@ Response:
 
 ```json
 {
-  "id": "123"
+  "id": "123",
+  "user_id": 123
 }
 ```
 
