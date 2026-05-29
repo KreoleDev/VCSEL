@@ -52,7 +52,7 @@
       "notarize": false
     },
     "dmg": {
-      "sign": false
+      "sign": true
     },
     "afterSign": "scripts/notarize.js"
   },
