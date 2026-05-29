@@ -123,6 +123,10 @@ if(isset($server_file_check)){
 		echo '</dl>';
 	    }
 	}
+    $vcsel_app_active=basename($_SERVER['SCRIPT_NAME'])=='vcsel_app.php'?' class="active"':'';
+    echo '<dl><dt>Downloads</dt>';
+        echo '<dd><a' . $vcsel_app_active . ' href="' . CFG_CMS_BASE_URL . 'vcsel_app.php" title="VCSEL APP">VCSEL APP</a></dd>';
+    echo '</dl>';
 	?>
     </div>
     <div id="main_content">

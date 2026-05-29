@@ -7,6 +7,7 @@ require_once('common/includes/std_lib.inc.php');
 //--------------------------------------------------------------------------------------------------------------//
 function show($values,$errors,$hidden){
     global $common;
+    $body_class='password_update_page';
     require_once('common/includes/header.inc.php');
         //find password min length
         $db=new api_db();
@@ -14,8 +15,11 @@ function show($values,$errors,$hidden){
     
         ?>
         <div id="login">
-            <img src="common/images/login_logo.png" alt="<?=CFG_CMS_NAME; ?>" />
-            <div>
+            <div class="password_card">
+                <div class="password_brand">
+                    <img src="common/images/login_logo.png" alt="<?=CFG_CMS_NAME; ?>" />
+                </div>
+                <h1>Update password</h1>
                 <div class="info_box">
                     <p>Every <?=$_SESSION['local_password_expire_days']; ?> days your password must be changed. Your new password needs to be <?=$site_info[0]['local_password_min_length']; ?> or more characters in length and contain at least three of the following:</p>
                     <ul>
@@ -27,13 +31,13 @@ function show($values,$errors,$hidden){
                 </div>
                 <?php
                 $frm=new frm($values,$errors,$hidden);
-                echo $frm->begin_frm();
-                    echo $frm->begin_fieldset('Update Password');
-                        echo $frm->begin_dl();
-                            echo $frm->password('current_password','Current Password:');
-                            echo $frm->password('new_password','New Password:');
-                            echo $frm->password('new2_password','Confirm Password:');
-                            echo $frm->submit('submit','Submit','submit');
+                echo $frm->begin_frm('password_update_form','password_update_form');
+                    echo $frm->begin_fieldset('','');
+                        echo $frm->begin_dl('password_update_fields');
+                            echo $frm->password('current_password','Current Password');
+                            echo $frm->password('new_password','New Password');
+                            echo $frm->password('new2_password','Confirm Password');
+                            echo $frm->submit('submit','Update Password','submit');
                         echo $frm->end_dl();
                     echo $frm->end_fieldset();
                 echo $frm->end_frm();
@@ -92,20 +96,20 @@ function update(){
         show($_POST,$errors,array('mode'=>'update'));
     }else{
         //No errors found
-        //Create new salt
-        if(function_exists(mcrypt_create_iv)){ //Use better random number
-			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM); 
-		}else{ //Use universal code
-			$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-			$salt = '';
-			for ($i = 0; $i < 22; $i++){
-				$salt .= $characters[mt_rand(0, 61)];
-			}
-		}
-        $salt = base64_encode($salt);
-        $salt = str_replace('+', '.', $salt);
-        $db_pw= sha1($_POST['new_password'] . $salt);
-            
+       //Create new salt
+try {
+    $salt = random_bytes(22);
+} catch (Exception $e) {
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    $salt = '';
+    for ($i = 0; $i < 22; $i++) {
+        $salt .= $characters[random_int(0, 61)];
+    }
+}
+
+$salt = base64_encode($salt);
+$salt = str_replace('+', '.', $salt);
+$db_pw = sha1($_POST['new_password'] . $salt);
         //Store in db
         $common['db']->pec('UPDATE core_users SET password=?, password_set_date=NOW(), salt=? WHERE user_id=? LIMIT 1',array($db_pw,$salt,$_SESSION['user_id']),'ssi');
             

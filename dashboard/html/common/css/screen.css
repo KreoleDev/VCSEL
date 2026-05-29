@@ -401,6 +401,10 @@ form{
            font-weight: bold;
            background: #fff;
         }
+            #main_menu dl dd a.active{
+                background:#0A67A3;
+                color:#fff;
+            }
             #main_menu dl dd a:hover{
                 background:#0A67A3;
                 color:#fff;
@@ -547,6 +551,99 @@ footer{
         text-align: left;
         padding:0 4%;
     }
+
+.app_download_page{
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.app_download_header{
+    margin: 8px 0 24px;
+}
+    .app_download_header h2{
+        color:#123040;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size:34px;
+        line-height:42px;
+        text-align:left;
+    }
+    .app_download_header p{
+        color:#4d6170;
+        font-size:16px;
+        line-height:24px;
+        padding:0;
+        text-align:left;
+    }
+
+.app_download_grid{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap:18px;
+}
+
+.app_download_card{
+    background:#fff;
+    border:1px solid #d6e4ec;
+    border-radius:8px;
+    box-shadow:0 12px 32px rgba(36,76,94,0.10);
+    box-sizing:border-box;
+    min-height:260px;
+    padding:26px;
+}
+    .app_download_icon{
+        align-items:center;
+        background:#eef6f3;
+        border-radius:8px;
+        color:#07578e;
+        display:flex;
+        font-size:24px;
+        font-weight:bold;
+        height:58px;
+        justify-content:center;
+        margin-bottom:20px;
+        width:58px;
+    }
+    .app_download_card h3{
+        color:#123040;
+        font-size:24px;
+        line-height:32px;
+        margin-bottom:8px;
+    }
+    .app_download_card p{
+        color:#4d6170;
+        line-height:22px;
+        padding:0 0 18px;
+        text-align:left;
+    }
+    .app_download_card span{
+        color:#60708d;
+        display:block;
+        font-size:13px;
+        line-height:18px;
+        min-height:36px;
+        word-break:break-word;
+    }
+    .app_download_card a,
+    .app_download_card button{
+        background:#07578e;
+        border:0;
+        border-radius:6px;
+        box-sizing:border-box;
+        color:#fff;
+        display:block;
+        font-size:16px;
+        font-weight:bold;
+        line-height:44px;
+        margin-top:20px;
+        text-align:center;
+        text-decoration:none;
+        width:100%;
+    }
+    .app_download_card button{
+        background:#dce5ec;
+        color:#748491;
+        cursor:not-allowed;
+    }
     
 #menu_overlay{
     width:100%;
@@ -629,6 +726,10 @@ footer{
     
     footer{
         display: none;
+    }
+
+    .app_download_grid{
+        grid-template-columns:1fr;
     }
 }
 /*-----------------------------------------------------------------------------*/
