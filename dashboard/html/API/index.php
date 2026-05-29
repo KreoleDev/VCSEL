@@ -49,6 +49,10 @@ $endpoints = array(
         'methods' => array('POST'),
         'modes' => array('getVcselResults', 'getVcselResultsPage', 'addVcselNote')
     ),
+    'camera-testing.php' => array(
+        'methods' => array('POST'),
+        'modes' => array('saveCameraTesting', 'getCameraTesting', 'getCameraTestingPage')
+    ),
     'db-gateway.php' => array(
         'methods' => array('internal'),
         'modes' => array('legacy database gateway')

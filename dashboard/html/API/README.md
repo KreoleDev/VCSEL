@@ -54,5 +54,10 @@ The Electron production app API contract lives in:
 - `getVcselResultsPage`: returns one server-side DataTables page of dashboard VCSEL result rows.
 - `addVcselNote`: adds a VCSEL result note and writes the module action log.
 
+### `camera-testing.php`
+- `saveCameraTesting`: saves one Letron camera testing result row.
+- `getCameraTesting`: returns camera testing result rows.
+- `getCameraTestingPage`: returns one server-side DataTables page of camera testing result rows.
+
 ### `7680-board-tests.php`
 - `saveBoardTestResults`

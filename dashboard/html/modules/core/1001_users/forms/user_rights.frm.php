@@ -114,7 +114,8 @@ if($common['security']->check_rights(2)){
         case 'edit':
             //find all current rights
             $access_info=$common['db']->pec('SELECT access_level FROM core_user_rights WHERE ext_module_id=? AND ext_user_id=? LIMIT 1',array($_REQUEST['module_id'],$_REQUEST['user_id']),'ii',array('access_level'));
-            $split_rights=str_split(strrev(base_convert($access_info[0]['access_level'],10,2)));
+            $access_level=!empty($access_info)?$access_info[0]['access_level']:0;
+            $split_rights=str_split(strrev(base_convert($access_level,10,2)));
             $values=array();
             foreach($split_rights as $key=>$value){
                 if($value==1){

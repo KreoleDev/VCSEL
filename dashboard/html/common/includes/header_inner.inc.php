@@ -11,6 +11,20 @@ if(isset($_SESSION['mod_id'])){
     $common['db']->pec('INSERT INTO core_user_module_actions SET ext_user_id=?, ext_module_id=?, action="Load Page", datetime=NOW(), remote_address=?',array($_SESSION['user_id'],$_SESSION['mod_id'],$_SERVER['REMOTE_ADDR']),'iis');
 }
 
+// Keep admin menus current when modules are added after the admin logged in.
+if(isset($_SESSION['user_id'])){
+    $admin_info=$common['db']->pec('SELECT count(*) FROM core_user_group_lookup WHERE ext_user_id=? AND ext_group_id=2 LIMIT 1',array($_SESSION['user_id']),'i',array('count'));
+    if(!empty($admin_info) && $admin_info[0]['count']==1){
+        $_SESSION['modules']=array();
+        $results=$common['db']->pec('SELECT module_id, title, path, ext_panel_id, sort_order FROM core_modules ORDER BY ext_panel_id, sort_order, title',array(),'',array('module_id', 'title', 'path', 'ext_panel_id', 'sort_order'));
+        foreach($results as $row){
+            $_SESSION['modules'][$row['ext_panel_id']][$row['sort_order'] . '_' . $row['module_id']]['id']=$row['module_id'];
+            $_SESSION['modules'][$row['ext_panel_id']][$row['sort_order'] . '_' . $row['module_id']]['title']=$row['title'];
+            $_SESSION['modules'][$row['ext_panel_id']][$row['sort_order'] . '_' . $row['module_id']]['path']=$row['path'];
+        }
+    }
+}
+
 //Determine modification date/time for page loaded
 if(isset($server_file_check)){
 	$newest_time=0;
@@ -140,6 +154,16 @@ $profile_initials=strtoupper($profile_initials);
 	<div id="profile_actions">
 	    <?php if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){ ?>
 		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a>
+		<?php if(isset($_SESSION['modules'])){
+		    foreach($_SESSION['modules'] as $panel_modules){
+			foreach($panel_modules as $module){
+			    if(isset($module['id']) && $module['id']==7014){ ?>
+		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7014_camera_testing/index.php?mod_id=7014" title="Camera Testing">Camera Testing</a>
+			    <?php
+			    }
+			}
+		    }
+		} ?>
 		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="VCSEL App">VCSEL App</a>
 	    <?php } ?>
 	    <button id="profile_menu_btn" type="button">
