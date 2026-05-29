@@ -21,28 +21,31 @@ if(isset($_REQUEST['logoff']) && $_REQUEST['logoff']=='true'){
 //--------------------------------------------------------------------------------------------------------------//
 function show($values,$errors,$hidden){
     global $common;
+    $body_class='login_page';
     require_once('common/includes/header.inc.php');
     ?>
         <div id="login">
-            <img src="common/images/login_logo.png" alt="<?=CFG_CMS_NAME; ?>" />
-            <div>
+            <div class="login_brand">
+                <img src="common/images/login_logo.png?v=20260529" alt="<?=CFG_CMS_NAME; ?>" />
+            </div>
+            <div class="login_divider"></div>
+            <div class="login_content">
+                <h1>Sign in</h1>
                 <?php
                 $frm=new frm($values,$errors,$hidden);
-                echo $frm->begin_frm();
-                    echo $frm->begin_fieldset('Login');
-                        echo $frm->begin_dl();
-                            if(!CFG_MULTI_SITE){
-                               echo '<div style="display:none;">'; 
-                            }
-                            echo $frm->text('site','Site:',true,64,'','block',(!CFG_MULTI_SITE?(isset($_REQUEST['site'])?$_REQUEST['site']:CFG_SINGLE_SITE):''),'',CFG_MULTI_SITE?true:false);
-                            if(!CFG_MULTI_SITE){
-                               echo '</div>'; 
-                            }
-                            echo $frm->text('username','Username:',true,64,'','block','','',!CFG_MULTI_SITE?true:false);
-                            echo $frm->password('password','Password:',true,64,'block');
-                            echo $frm->submit('log_in','Log In','submit');
-                        echo $frm->end_dl();
-                    echo $frm->end_fieldset();
+                echo $frm->begin_frm('login_form','login_form');
+                    echo $frm->begin_dl();
+                        if(!CFG_MULTI_SITE){
+                           echo '<div class="hidden">';
+                        }
+                        echo $frm->text('site','Site',true,64,'','block',(!CFG_MULTI_SITE?(isset($_REQUEST['site'])?$_REQUEST['site']:CFG_SINGLE_SITE):''),'',CFG_MULTI_SITE?true:false);
+                        if(!CFG_MULTI_SITE){
+                           echo '</div>';
+                        }
+                        echo $frm->text('username','Username',true,64,'','block','','Enter username',!CFG_MULTI_SITE?true:false);
+                        echo $frm->password('password','Password',true,64,'block','Enter password');
+                        echo $frm->submit('log_in','Sign in','submit');
+                    echo $frm->end_dl();
                 echo $frm->end_frm();
                 ?>
             </div>

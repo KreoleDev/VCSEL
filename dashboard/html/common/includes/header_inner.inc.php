@@ -93,9 +93,9 @@ if(isset($server_file_check)){
     <?php require('common/includes/js.inc.php'); ?>
     <?=isset($additional_head)?$additional_head:''; ?>
 </head>
-<body>
+<body<?=isset($body_class) && $body_class!==''?' class="' . $body_class . '"':''; ?>>
     <header>
-        <a id="logo" href="<?=CFG_CMS_BASE_URL; ?>index.php" title="Home"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/header_logo.png" alt="<?=CFG_CMS_NAME; ?>" /></a>
+        <a id="logo" href="<?=CFG_CMS_BASE_URL; ?>index.php" title="Home"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/login_logo.png?v=20260529" alt="<?=CFG_CMS_NAME; ?>" /></a>
 	
 	<div id="header_options">
 	    <a id="main_menu_btn" href="" title="Main Menu"><img src="<?=CFG_CMS_BASE_URL; ?>common/images/header_menu.png" alt="Main Menu" /></a>

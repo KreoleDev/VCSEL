@@ -48,4 +48,4 @@ require_once('common/includes/std_lib.inc.php');
     </script>
     <?php require('common/includes/js.inc.php'); ?>
 </head>
-<body>
+<body<?=isset($body_class) && $body_class!==''?' class="' . $body_class . '"':''; ?>>

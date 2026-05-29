@@ -17,7 +17,7 @@ function show($values,$errors,$hidden){
         <div id="login">
             <div class="password_card">
                 <div class="password_brand">
-                    <img src="common/images/login_logo.png" alt="<?=CFG_CMS_NAME; ?>" />
+                    <img src="common/images/login_logo.png?v=20260529" alt="<?=CFG_CMS_NAME; ?>" />
                 </div>
                 <h1>Update password</h1>
                 <div class="info_box">

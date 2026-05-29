@@ -1,8 +1,19 @@
 body{
-    background: url(../images/watermark.png) fixed bottom left no-repeat;
+    background: #fff;
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 20px;
+}
+
+body.login_page{
+    min-height: 100vh;
+    background: #e9f5f7;
+    background: linear-gradient(135deg, #e3f5ef 0%, #eef7f8 45%, #dfedf2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 24px 24px 48px;
 }
 
 p{
@@ -142,10 +153,127 @@ table td a{
     margin: 20px auto;
     box-shadow: 3px 3px 5px #888;
     padding-top: 15px;
-    background:url(../images/bg_grad.png) bottom left repeat-x #ffffff; /* Old browsers */
+    background:#fff;
     max-width: 520px;
     border-radius: 25px;
-    opacity: 0.90;
+}
+
+body.login_page #login{
+    width: 540px;
+    max-width: 100%;
+    margin: 0;
+    padding: 34px 48px 46px;
+    border: 1px solid #d5e3eb;
+    border-radius: 8px;
+    box-shadow: 0 18px 46px rgba(0, 68, 112, 0.14);
+    box-sizing: border-box;
+    text-align: left;
+}
+
+body.login_page #login .login_brand{
+    padding: 0;
+}
+
+body.login_page #login .login_brand img{
+    display: block;
+    width: 260px;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+}
+
+body.login_page #login .login_brand p{
+    padding: 6px 0 0;
+    color: #4c6573;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 22px;
+    text-align: left;
+}
+
+body.login_page #login .login_divider{
+    height: 1px;
+    margin: 32px 0 30px;
+    padding: 0;
+    background: #d4e3ea;
+}
+
+body.login_page #login .login_content{
+    padding: 0;
+}
+
+body.login_page #login h1{
+    margin: 0 0 26px;
+    color: #1b3240;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 40px;
+}
+
+body.login_page #login form{
+    padding-bottom: 0;
+}
+
+body.login_page #login form dl{
+    padding: 0;
+}
+
+body.login_page #login form dt{
+    margin: 0 0 6px;
+    color: #273d4d;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 24px;
+}
+
+body.login_page #login form dd{
+    padding: 0 0 20px;
+}
+
+body.login_page #login form dd.block input{
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid #b8cad5;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: #1b3240;
+    font-size: 20px;
+    line-height: 48px;
+}
+
+body.login_page #login form dd.block input:focus{
+    background: #fff;
+    border-color: #00558c;
+    box-shadow: 0 0 0 4px rgba(0, 85, 140, 0.16);
+    outline: none;
+}
+
+body.login_page #login form dd.block input::placeholder{
+    color: #777;
+}
+
+body.login_page #login form dd.submit{
+    padding: 6px 0 0;
+}
+
+body.login_page #login form dd.submit button{
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    border: 0;
+    border-radius: 6px;
+    box-shadow: none;
+    background: #00558c;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 48px;
+}
+
+body.login_page #login form dd.submit button:hover,
+body.login_page #login form dd.submit button:focus{
+    background: #004b7c;
 }
 
 table.dataTable{
@@ -322,6 +450,11 @@ header{
     header a#logo{
         float: left;
     }
+        header a#logo img{
+            max-height: 52px;
+            width: auto;
+            margin: 4px 0;
+        }
     header a{
         margin:0 5px;
     }
@@ -537,10 +670,9 @@ footer{
     height:24px;
     position: fixed;
     bottom: 0;
-    border-top:1px solid #AE0000;
-    background:#AE0000;
+    border-top:1px solid #3fa348;
+    background:#00558c;
     line-height: 24px;
-    opacity: 0.9;
     color: #fff;
 }
     #login img{
