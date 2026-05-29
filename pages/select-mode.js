@@ -43,9 +43,21 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
                     <div id="testWindow">
                         <div class="padded">
                             <div class="instructions">{{ window.app.instructions }}<div id="altInstructions"></div></div>
-                            <div class="resultsWindow">
+                            <div class="resultsWindow" v-show="window.app.showResultText || window.app.showDisplayImg">
                                 <div class="resultTextContainer" v-show="window.app.showResultText" v-bind:class="{ passState: window.app.resultState=='pass', failState: window.app.resultState=='fail' }">{{ window.app.resultText }}<div id="altResults"></div></div>
                                 <div class="imgContainer" v-on:click="showLargeImg()" v-show="window.app.showDisplayImg" v-bind:style="{ backgroundImage: window.app.displayImg }"></div>
+                            </div>
+                            <div id="vcselCameraPanel">
+                                <div id="vcselCameraStage" v-bind:class="{ cameraReady: window.app.vcselCameraReady }">
+                                    <video id="vcselCameraVideo" autoplay muted playsinline></video>
+                                    <canvas id="vcselCameraOverlay"></canvas>
+                                    <div id="vcselCameraReadout">
+                                        <span>Brightness: {{ formatCameraValue(window.app.vcselCameraBrightness) }}</span>
+                                        <span>Area: {{ formatCameraValue(window.app.vcselCameraArea) }}</span>
+                                        <span>{{ window.app.vcselCameraStatus }}</span>
+                                    </div>
+                                    <div id="vcselCameraSaved" v-show="window.app.vcselCameraSavedMessage">{{ window.app.vcselCameraSavedMessage }}</div>
+                                </div>
                             </div>
                         </div>
 
@@ -124,6 +136,12 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
                     aniHideLoading().then(() => {
                         self.showLoading = false;
                         self.resetView();
+                        self.$nextTick(function() {
+                            window.app.initVcselCamera(
+                                document.getElementById('vcselCameraVideo'),
+                                document.getElementById('vcselCameraOverlay')
+                            );
+                        });
                         /*if(window.app.auto) {
                             setTimeout(() => {
                                 runTest(window.app.tests[0].test_id);
@@ -198,6 +216,7 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
                             window.app.tests[i].is_current = "0";
                         }
                     }
+                    window.app.armVcselCamera();
                     setTimeout(() => {
                         runTest(test_id);
                     }, 100);
@@ -225,6 +244,7 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
 
                 this.nextTestText = 'Next Test';
                 window.app.instructions = window.app.tests[window.app.testIndex].instructions;
+                window.app.armVcselCamera();
                 runTest(window.app.tests[window.app.testIndex].test_id);
             },
             //------------------------------------------------------------------------------------------------------
@@ -246,6 +266,10 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
             //------------------------------------------------------------------------------------------------------
             retryTest: function() {
                 window.app.retryTest();
+            },
+            //------------------------------------------------------------------------------------------------------
+            formatCameraValue: function(value) {
+                return Number(value || 0).toFixed(2);
             },
             //------------------------------------------------------------------------------------------------------
             resetView: function() {

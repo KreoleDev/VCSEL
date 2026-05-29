@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Menu, ipcRenderer} = require('electron');
+const {app, BrowserWindow, Menu, ipcRenderer, session} = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -54,6 +54,10 @@ process.on('uncaughtException', function(err) {
 });
 
 function createWindow () {
+  session.defaultSession.setPermissionRequestHandler(function(webContents, permission, callback) {
+    callback(permission === 'media');
+  });
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1024,

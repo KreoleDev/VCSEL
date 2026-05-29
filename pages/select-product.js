@@ -53,7 +53,7 @@ const selectProductPage = Vue.component('selectProductPage', function (resolve, 
                         this.connectionInst.postToServer({
                             'mode': 'getActiveProducts'
                         }, 'products/').then((response) => {
-                            self.products = response.data;
+                            self.products = self.filterVcselProducts(response.data);
                             aniHideLoading().then(() => {
                                 self.showLoading = false;
                             }, () => { });
@@ -79,6 +79,12 @@ const selectProductPage = Vue.component('selectProductPage', function (resolve, 
             }, () => { });
         },
         methods: {
+            //------------------------------------------------------------------------------------------------------
+            filterVcselProducts: function(products) {
+                return (products || []).filter(function(product) {
+                    return product.title && product.title.toLowerCase().indexOf('vcsel') >= 0;
+                });
+            },
             //------------------------------------------------------------------------------------------------------
             listTLAs: function(productID, productName) {
                 var self = this;

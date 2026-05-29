@@ -53,7 +53,13 @@ window.addEventListener('load', function() {
             allowBack: true,
             isAuthenticated: false,
             currentUser: '',
-            currentUserId: ''
+            currentUserId: '',
+            vcselCamera: null,
+            vcselCameraStatus: 'Camera idle',
+            vcselCameraBrightness: 0,
+            vcselCameraArea: 0,
+            vcselCameraReady: false,
+            vcselCameraSavedMessage: ''
         },
         mounted: function() {
             var self = this;
@@ -73,6 +79,15 @@ window.addEventListener('load', function() {
                 router.push(routePath)
             });
 
+            document.addEventListener('click', function(event) {
+                var clickedText = event.target && event.target.innerText ? event.target.innerText.trim().toLowerCase() : '';
+                if(clickedText.indexOf('test another vcsel') >= 0) {
+                    setTimeout(function() {
+                        self.armVcselCamera();
+                    }, 100);
+                }
+            });
+
             //Load from config
             var savedDataServiceURL = localStorage.getItem("cfgDataServiceURL");
             if (
@@ -82,6 +97,16 @@ window.addEventListener('load', function() {
                 localStorage.setItem("cfgDataServiceURL", CFG_DATA_SERVICE_URL);
             } else {
                 CFG_DATA_SERVICE_URL = savedDataServiceURL;
+            }
+        },
+        watch: {
+            resultText: function(value) {
+                this.captureVcselCameraResult(value);
+            },
+            showResultText: function(value) {
+                if(value) {
+                    this.captureVcselCameraResult(this.resultText);
+                }
             }
         },
         methods: {
@@ -113,6 +138,7 @@ window.addEventListener('load', function() {
             //------------------------------------------------------------------------------------------------------
             passTest: function() {
                 window.app.passFailVisible = false;
+                this.captureVcselCameraResult(window.app.resultText);
                 window.app.tests[window.app.testIndex].passed_test = 'true';
                 if(window.app.testIndex + 1 < window.app.tests.length) {
                     window.app.tests[window.app.testIndex].is_current = "0";
@@ -149,11 +175,59 @@ window.addEventListener('load', function() {
                 document.getElementById("altInstructions").innerHTML = '';
 
                 window.app.instructions = window.app.tests[window.app.testIndex].instructions;
+                this.armVcselCamera();
                 setTimeout(() => {
                     runTest(window.app.tests[window.app.testIndex].test_id);
                 }, 100);
             },
             //------------------------------------------------------------------------------------------------------
+            initVcselCamera: function(videoElement, overlayCanvas) {
+                var self = this;
+
+                if(!window.VcselCameraAnalyzer || !videoElement || !overlayCanvas) {
+                    return;
+                }
+
+                overlayCanvas.width = 640;
+                overlayCanvas.height = 480;
+
+                if(!self.vcselCamera) {
+                    self.vcselCamera = new VcselCameraAnalyzer({
+                        onStatus: function(status) {
+                            self.vcselCameraStatus = status;
+                        },
+                        onSaved: function(serial) {
+                            self.vcselCameraSavedMessage = 'Saved Serial ' + serial;
+                        },
+                        onMeasurement: function(measurement) {
+                            self.vcselCameraBrightness = measurement.brightness;
+                            self.vcselCameraArea = measurement.area;
+                            self.vcselCameraReady = measurement.ready;
+                            if(measurement.ready && self.showResultText) {
+                                self.captureVcselCameraResult(self.resultText);
+                            }
+                        }
+                    });
+                }
+
+                self.vcselCamera.setElements(videoElement, overlayCanvas);
+                self.vcselCamera.start().catch(function(err) {
+                    console.warn('VCSEL camera failed to start:', err);
+                });
+            },
+            //------------------------------------------------------------------------------------------------------
+            armVcselCamera: function() {
+                this.vcselCameraSavedMessage = '';
+                if(this.vcselCamera) {
+                    this.vcselCamera.arm();
+                }
+            },
+            //------------------------------------------------------------------------------------------------------
+            captureVcselCameraResult: function(resultText) {
+                if(this.vcselCamera) {
+                    this.vcselCamera.captureSerialResult(resultText);
+                }
+            },
 
             //------------------------------------------------------------------------------------------------------
         }
