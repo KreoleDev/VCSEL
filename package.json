@@ -8,7 +8,7 @@
     "start": "electron .",
     "start:mac": "./run-local-mac.sh",
     "dist": "electron-builder --mac dmg",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "echo skip postinstall"
   },
   "keywords": [
     "Electron",
@@ -19,7 +19,8 @@
   ],
   "build": {
     "appId": "com.pertechindustries.vcsel",
-    "productName": "Pertech-VCSEL",
+    "productName": "VCSEL",
+    "artifactName": "Pertech-VCSEL-${version}-${arch}.${ext}",
     "files": [
       "main.js",
       "renderer.js",

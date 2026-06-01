@@ -8,3 +8,4 @@ libPISCAN.so
 local-api/production/uploads/*
 !local-api/production/uploads/firmwares/
 !local-api/production/uploads/firmwares/**
+.apple-notarization.env
