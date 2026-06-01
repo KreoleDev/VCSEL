@@ -59,6 +59,8 @@ window.addEventListener('load', function() {
             vcselCameraBrightness: 0,
             vcselCameraArea: 0,
             vcselCameraReady: false,
+            vcselLotNumber: '',
+            vcselLotNumberError: '',
             vcselCameraSavedMessage: '',
             vcselCameraSavedMessageTimer: null
         },
@@ -170,6 +172,9 @@ window.addEventListener('load', function() {
             },
             //------------------------------------------------------------------------------------------------------
             retryTest: function() {
+                if(!this.requireVcselLotNumber()) {
+                    return;
+                }
                 window.app.showResultText = false;
                 window.app.showDisplayImg = false;
                 window.app.showError = false;
@@ -215,6 +220,9 @@ window.addEventListener('load', function() {
                         },
                         onSaveMeasurement: function(measurement) {
                             self.saveCameraTestingMeasurement(measurement);
+                        },
+                        getLotNumber: function() {
+                            return self.vcselLotNumber;
                         }
                     });
                 }
@@ -232,6 +240,23 @@ window.addEventListener('load', function() {
                 }
             },
             //------------------------------------------------------------------------------------------------------
+            isVcselLotNumberValid: function() {
+                return /^[A-Z0-9]{4}$/.test(this.vcselLotNumber);
+            },
+            //------------------------------------------------------------------------------------------------------
+            requireVcselLotNumber: function() {
+                if(this.isVcselLotNumberValid()) {
+                    this.vcselLotNumberError = '';
+                    return true;
+                }
+
+                this.vcselLotNumberError = 'Put a four character lot number before the VCSEL test';
+                this.errorPromptMessage = this.vcselLotNumberError;
+                this.showErrorPrompt = true;
+                aniShowErrorPrompt().then(() => { }, () => { });
+                return false;
+            },
+            //------------------------------------------------------------------------------------------------------
             captureVcselCameraResult: function(resultText) {
                 if(this.vcselCamera) {
                     this.vcselCamera.captureSerialResult(resultText);
@@ -247,7 +272,7 @@ window.addEventListener('load', function() {
                     timestamp: measurement.timestamp,
                     brightness: measurement.brightness,
                     area: measurement.area,
-                    lot_number: measurement.lot_number || 'LOT0000',
+                    lot_number: measurement.lot_number,
                     serial_number: measurement.serial_number,
                     acquired: measurement.acquired || 'Auto',
                     tester_name: self.testerName,
