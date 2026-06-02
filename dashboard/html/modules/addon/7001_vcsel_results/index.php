@@ -19,6 +19,7 @@ $page_title='Vcsel Results';
 $additional_head='
 <script type="text/javascript">
 $(document).ready(function(){
+    $("#page_progress_dialog").addClass("is_visible").attr("aria-hidden","false");
     $("#vcsel_results_table").dataTable({
         "bDestroy": true,
         "processing": true,
@@ -34,7 +35,10 @@ $(document).ready(function(){
         },
         "columnDefs": [
             { "orderable": false, "targets": [7, 8] }
-        ]
+        ],
+        "fnInitComplete": function(){
+            $("#page_progress_dialog").removeClass("is_visible").attr("aria-hidden","true");
+        }
     });
 });
 </script>';

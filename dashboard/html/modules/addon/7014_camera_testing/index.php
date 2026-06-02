@@ -10,6 +10,7 @@ $page_title='Camera Testing';
 $additional_head='
 <script type="text/javascript">
 $(document).ready(function(){
+    $("#page_progress_dialog").addClass("is_visible").attr("aria-hidden","false");
     $("#camera_testing_table").dataTable({
         "bDestroy": true,
         "processing": true,
@@ -22,6 +23,9 @@ $(document).ready(function(){
             "data": function(data){
                 data.mode = "getCameraTestingPage";
             }
+        },
+        "fnInitComplete": function(){
+            $("#page_progress_dialog").removeClass("is_visible").attr("aria-hidden","true");
         }
     });
 });

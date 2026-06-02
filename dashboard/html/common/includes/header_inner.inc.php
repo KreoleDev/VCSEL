@@ -118,6 +118,13 @@ if(isset($server_file_check)){
 		}
 	    });
 	    //---------------------------------------------------------------------------//
+
+	    //Show loading dialog while selected module pages open
+	    //---------------------------------------------------------------------------//
+	    $('.page_progress_link').click(function(){
+		$('#page_progress_dialog').addClass('is_visible').attr('aria-hidden','false');
+	    });
+	    //---------------------------------------------------------------------------//
 	});
     </script>
     <?php require('common/includes/js.inc.php'); ?>
@@ -153,12 +160,12 @@ $profile_initials=strtoupper($profile_initials);
 	
 	<div id="profile_actions">
 	    <?php if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){ ?>
-		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a>
+		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a>
 		<?php if(isset($_SESSION['modules'])){
 		    foreach($_SESSION['modules'] as $panel_modules){
 			foreach($panel_modules as $module){
 			    if(isset($module['id']) && $module['id']==7014){ ?>
-		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7014_camera_testing/index.php?mod_id=7014" title="Camera Testing">Camera Testing</a>
+		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7014_camera_testing/index.php?mod_id=7014" title="Camera Testing">Camera Testing</a>
 			    <?php
 			    }
 			}
@@ -179,6 +186,11 @@ $profile_initials=strtoupper($profile_initials);
 	    </ul>
 	</div>
     </header>
+    <div id="page_progress_dialog" class="page_progress_dialog" role="dialog" aria-modal="true" aria-label="Loading" aria-hidden="true">
+	<div class="page_progress_panel">
+	    <span class="page_progress_spinner" aria-hidden="true"></span>
+	</div>
+    </div>
     <?php if(!isset($_SESSION['is_vcsel_app_user']) || !$_SESSION['is_vcsel_app_user']){ ?>
     <div id="main_menu">
 	<?php
@@ -193,7 +205,9 @@ $profile_initials=strtoupper($profile_initials);
 		    if(in_array($module_title,array('Dashboard','Account Settings'))){
 			continue;
 		    }
-		    $module_links.='<dd><a href="' . CFG_CMS_BASE_URL . $_SESSION['modules'][$row['panel_id']][$key]['path'] . '?mod_id=' . $_SESSION['modules'][$row['panel_id']][$key]['id'] . '" title="' . $module_title . '">' . $module_title . '</a></dd>';
+		    $module_id=$_SESSION['modules'][$row['panel_id']][$key]['id'];
+		    $module_progress_class=in_array($module_id,array(7001,7014))?' class="page_progress_link"':'';
+		    $module_links.='<dd><a' . $module_progress_class . ' href="' . CFG_CMS_BASE_URL . $_SESSION['modules'][$row['panel_id']][$key]['path'] . '?mod_id=' . $module_id . '" title="' . $module_title . '">' . $module_title . '</a></dd>';
 		}
 		if(!empty($module_links)){
 		    echo '<dl><dt>' . $row['title'] . '</dt>' . $module_links . '</dl>';

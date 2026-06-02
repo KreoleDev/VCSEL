@@ -281,7 +281,8 @@ body.login_page #login form dd.submit button:disabled{
     cursor: wait;
 }
 
-body.login_page .login_progress_dialog{
+body.login_page .login_progress_dialog,
+.page_progress_dialog{
     display: none;
     align-items: center;
     justify-content: center;
@@ -294,11 +295,13 @@ body.login_page .login_progress_dialog{
     background: rgba(255, 255, 255, 0.62);
 }
 
-body.login_page .login_progress_dialog.is_visible{
+body.login_page .login_progress_dialog.is_visible,
+.page_progress_dialog.is_visible{
     display: flex;
 }
 
-body.login_page .login_progress_panel{
+body.login_page .login_progress_panel,
+.page_progress_panel{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -311,7 +314,8 @@ body.login_page .login_progress_panel{
     background: #fff;
 }
 
-body.login_page .login_progress_spinner{
+body.login_page .login_progress_spinner,
+.page_progress_spinner{
     display: block;
     width: 48px;
     height: 48px;
@@ -319,10 +323,10 @@ body.login_page .login_progress_spinner{
     border-top-color: #00558c;
     border-radius: 50%;
     box-sizing: border-box;
-    animation: login_progress_spin 0.75s linear infinite;
+    animation: page_progress_spin 0.75s linear infinite;
 }
 
-@keyframes login_progress_spin{
+@keyframes page_progress_spin{
     to{
         transform: rotate(360deg);
     }
