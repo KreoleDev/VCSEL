@@ -7,6 +7,7 @@
   "scripts": {
     "start": "electron .",
     "start:win": "electron .",
+    "diagnose:hardware": "electron scripts/diagnose-hardware.js",
     "dist": "electron-builder --win nsis --x64",
     "dist:win": "electron-builder --win nsis --x64",
     "dist:win:portable": "electron-builder --win portable --x64",
