@@ -50,6 +50,29 @@ function show($values,$errors,$hidden){
                 ?>
             </div>
         </div>
+        <div id="login_progress_dialog" class="login_progress_dialog" role="dialog" aria-modal="true" aria-label="Signing in" aria-hidden="true">
+            <div class="login_progress_panel">
+                <span class="login_progress_spinner" aria-hidden="true"></span>
+            </div>
+        </div>
+        <script type="text/javascript">
+        (function(){
+            var form = document.getElementById('login_form');
+            var button = document.getElementById('log_in');
+            var dialog = document.getElementById('login_progress_dialog');
+
+            if (!form || !button || !dialog) {
+                return;
+            }
+
+            form.onsubmit = function(){
+                dialog.className = dialog.className + ' is_visible';
+                dialog.setAttribute('aria-hidden', 'false');
+                button.disabled = true;
+                return true;
+            };
+        }());
+        </script>
     <?php
     require_once('common/includes/footer.inc.php');
 }

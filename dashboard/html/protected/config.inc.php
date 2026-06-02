@@ -54,7 +54,7 @@ function pertech_cms_detect_host(){
 }
 
 $cmsName=pertech_cms_env_value('PERTECH_CMS_NAME');
-$cmsName=!empty($cmsName)?$cmsName:'Pertech Intranet';
+$cmsName=!empty($cmsName)?$cmsName:'Pertech Products';
 
 $baseUrl=pertech_cms_env_value('PERTECH_CMS_BASE_URL');
 if(empty($baseUrl)){
