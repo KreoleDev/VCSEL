@@ -6,8 +6,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "start:mac": "./run-local-mac.sh",
-    "dist": "electron-builder --mac dmg",
+    "start:win": "electron .",
+    "dist": "electron-builder --win nsis --x64",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:win:portable": "electron-builder --win portable --x64",
     "postinstall": "echo skip postinstall"
   },
   "keywords": [
@@ -21,6 +23,7 @@
     "appId": "com.pertechindustries.vcsel",
     "productName": "VCSEL",
     "artifactName": "Pertech-VCSEL-${version}-${arch}.${ext}",
+    "npmRebuild": false,
     "files": [
       "main.js",
       "renderer.js",
@@ -35,37 +38,34 @@
       "!dist/**",
       "!node_modules/.cache/**",
       "!*.zip",
-      "!*.dmg",
+      "!*.exe",
       "!*.log",
       "!.git/**",
       "!.php-sessions/**",
       "!**/.DS_Store"
     ],
-    "mac": {
-      "icon": "./build/icons/icon.icns",
+    "win": {
+      "icon": "./build/icons/icon.ico",
       "target": [
-        "dmg"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
-      "category": "public.app-category.utilities",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.inherit.plist",
-      "extendInfo": {
-        "NSCameraUsageDescription": "VCSEL uses the camera built into the test fixture to measure light dot brightness and area."
-      },
-      "identity": "Pertech Industries Inc. (ZC2GFZLK83)",
-      "notarize": false
+      "publisherName": "Pertech Industries Inc."
     },
-    "dmg": {
-      "sign": true
-    },
-    "afterSign": "scripts/notarize.js"
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   },
   "author": "Pertech <development@pertechindustries.com>",
   "license": "CC0-1.0",
   "devDependencies": {
-    "@electron/notarize": "^3.1.1",
     "electron": "^11.5.0",
     "electron-builder": "24.13.3"
   },

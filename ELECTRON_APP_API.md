@@ -19,7 +19,7 @@ https://your-dashboard-domain.com/API/apps-api/
 For local testing:
 
 ```text
-http://127.0.0.1:8001/API/apps-api/
+https://vcsel.pertechindustries.com/API/apps-api/
 ```
 
 ## Request Format

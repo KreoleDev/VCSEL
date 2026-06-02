@@ -8,14 +8,17 @@ Cloud API URL:
 https://vcsel.pertechindustries.com/API/apps-api/
 ```
 
-## Run on macOS
+## Run on Windows
 
-```sh
+```powershell
 npm install
-npm run start:mac
+npm run start:win
 ```
 
+## Build Windows Installer
 
-for dmg run
-./build-production-mac.sh
+```powershell
+npm run dist:win
+```
 
+The installer is written to the `dist` folder.

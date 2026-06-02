@@ -5,7 +5,7 @@ This document describes the API the Electron production app needs when the `pert
 The current app calls a base URL from `CFG_DATA_SERVICE_URL` in `config.js`. Today that points to:
 
 ```text
-http://127.0.0.1:8010/production/
+https://vcsel.pertechindustries.com/API/apps-api/
 ```
 
 The cloud API should expose the same behavior under a new base URL, for example:
@@ -34,7 +34,7 @@ Product, TLA, test list, instructions, and test code are database-driven. Hardwa
 Current default local DB config is in `local-api/production/protected/db.info.php`:
 
 ```text
-host: localhost
+host: vcsel.pertechindustries.com
 user: prinet
 database: pertech
 ```
