@@ -1,9 +1,0 @@
-version: 1.0.17
-files:
-  - url: pertech-production-1.0.17-x86_64.AppImage
-    sha512: UCo41n+b4HOzCaUT5ud7pAfGtVBqae53hjmZa3ASP2yIRp3bPvUQ0VIhECCddpyrR0ERimB/DmtZvu6SINI99g==
-    size: 55426002
-    blockMapSize: 58646
-path: pertech-production-1.0.17-x86_64.AppImage
-sha512: UCo41n+b4HOzCaUT5ud7pAfGtVBqae53hjmZa3ASP2yIRp3bPvUQ0VIhECCddpyrR0ERimB/DmtZvu6SINI99g==
-releaseDate: '2022-04-13T20:46:36.318Z'

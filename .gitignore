@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.local-api.log
+.php-sessions/
+.vscode/
+debug.dat
+libPISCAN.so
+local-api/production/uploads/*
+!local-api/production/uploads/firmwares/
+!local-api/production/uploads/firmwares/**
+.apple-notarization.env

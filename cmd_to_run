@@ -1,24 +1,9 @@
+Run the Electron app on macOS
+
+npm install
+npm run start:mac
 
 
+Cloud API used by the app
 
-run the eletron
-cd /home/pertech/Documents/VCSEL_Prod/pertechindustries-linux-production-app-03a74c8aa95e/electron-quick-start
-XAUTH=$(ls /run/user/$(id -u)/.mutter-Xwaylandauth.* | head -n1)
-DISPLAY=:0 XAUTHORITY="$XAUTH" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus" GDK_BACKEND=x11 ./run-local-vcsel-app.sh
-
-
-db and server
-sudo systemctl start mysql
-
-cd /home/pertech/Documents/VCSEL_Prod/pertechindustries-pertech-resources-intranet-fc4df53e8c21
-PERTECH_DB_SOCKET_AUTH=1 PERTECH_DB_RECREATE=1 ./import-local-intranet-dbs.sh
-./start-local-intranet.sh
-
-http://127.0.0.1:8001/
-
-
-ocr script
-pertech@pertech-XPS-13-9370:~/Documents/VCSEL_Camera_Testing$ bash run_vcsel_analysis.sh
-
-
-
+https://vcsel.pertechindustries.com/API/apps-api/
