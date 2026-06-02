@@ -42,11 +42,6 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
                     </div>
                     <div id="testWindow">
                         <div class="padded">
-                            <div id="vcselLotPanel">
-                                <label for="vcselLotNumber">Lot Number</label>
-                                <input id="vcselLotNumber" type="text" maxlength="4" pattern="[A-Za-z0-9]*" v-model="window.app.vcselLotNumber" v-on:input="cleanLotNumber()" placeholder="A123">
-                                <span v-show="window.app.vcselLotNumberError">{{ window.app.vcselLotNumberError }}</span>
-                            </div>
                             <div class="instructions">{{ window.app.instructions }}<div id="altInstructions"></div></div>
                             <div class="resultsWindow" v-show="window.app.showResultText || window.app.showDisplayImg">
                                 <div class="resultTextContainer" v-show="window.app.showResultText" v-bind:class="{ passState: window.app.resultState=='pass', failState: window.app.resultState=='fail' }">{{ window.app.resultText }}<div id="altResults"></div></div>
@@ -281,13 +276,6 @@ window.selectModePage = Vue.component('selectModePage', function (resolve, rejec
                     return;
                 }
                 window.app.retryTest();
-            },
-            //------------------------------------------------------------------------------------------------------
-            cleanLotNumber: function() {
-                window.app.vcselLotNumber = (window.app.vcselLotNumber || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 4);
-                if(window.app.vcselLotNumber.length === 4) {
-                    window.app.vcselLotNumberError = '';
-                }
             },
             //------------------------------------------------------------------------------------------------------
             formatCameraValue: function(value) {

@@ -83,6 +83,10 @@ const loginPage = Vue.component('loginPage', function (resolve, reject) {
                                 self.showLoginError('Login succeeded but the server did not return a user ID.');
                                 return;
                             }
+                            localStorage.setItem('pertechAuthenticated', '1');
+                            localStorage.setItem('pertechUsername', username);
+                            localStorage.setItem('pertechDisplayName', displayName);
+                            localStorage.setItem('pertechUserId', userId);
                             sessionStorage.setItem('pertechAuthenticated', '1');
                             sessionStorage.setItem('pertechUsername', username);
                             sessionStorage.setItem('pertechDisplayName', displayName);

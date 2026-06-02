@@ -11,7 +11,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach(function(to, from, next) {
-    var isAuthenticated = sessionStorage.getItem('pertechAuthenticated') === '1' && !!sessionStorage.getItem('pertechUserId');
+    var isAuthenticated = (
+        localStorage.getItem('pertechAuthenticated') === '1' ||
+        sessionStorage.getItem('pertechAuthenticated') === '1'
+    ) && !!(localStorage.getItem('pertechUserId') || sessionStorage.getItem('pertechUserId'));
 
     if(to.matched.some(function(record) { return record.meta.requiresAuth; }) && !isAuthenticated) {
         next('/login');

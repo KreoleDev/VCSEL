@@ -59,7 +59,7 @@ window.addEventListener('load', function() {
             vcselCameraBrightness: 0,
             vcselCameraArea: 0,
             vcselCameraReady: false,
-            vcselLotNumber: '',
+            vcselLotNumber: '0000',
             vcselLotNumberError: '',
             vcselCameraSavedMessage: '',
             vcselCameraSavedMessageTimer: null
@@ -74,9 +74,9 @@ window.addEventListener('load', function() {
             }
             self.rs232Device = new rs232Device();
             self.genericUSBDevice = new genericUSBDevice();
-            self.isAuthenticated = sessionStorage.getItem('pertechAuthenticated') === '1';
-            self.currentUser = sessionStorage.getItem('pertechUsername') || '';
-            self.currentUserId = sessionStorage.getItem('pertechUserId') || '';
+            self.isAuthenticated = localStorage.getItem('pertechAuthenticated') === '1' || sessionStorage.getItem('pertechAuthenticated') === '1';
+            self.currentUser = localStorage.getItem('pertechUsername') || sessionStorage.getItem('pertechUsername') || '';
+            self.currentUserId = localStorage.getItem('pertechUserId') || sessionStorage.getItem('pertechUserId') || '';
 
             ipcRenderer.on('navigate', (e, routePath) => {
                 router.push(routePath)
@@ -115,6 +115,10 @@ window.addEventListener('load', function() {
         methods: {
             //------------------------------------------------------------------------------------------------------
             logout: function() {
+                localStorage.removeItem('pertechAuthenticated');
+                localStorage.removeItem('pertechUsername');
+                localStorage.removeItem('pertechDisplayName');
+                localStorage.removeItem('pertechUserId');
                 sessionStorage.removeItem('pertechAuthenticated');
                 sessionStorage.removeItem('pertechUsername');
                 sessionStorage.removeItem('pertechDisplayName');
@@ -222,7 +226,7 @@ window.addEventListener('load', function() {
                             self.saveCameraTestingMeasurement(measurement);
                         },
                         getLotNumber: function() {
-                            return self.vcselLotNumber;
+                            return '0000';
                         }
                     });
                 }
@@ -241,20 +245,13 @@ window.addEventListener('load', function() {
             },
             //------------------------------------------------------------------------------------------------------
             isVcselLotNumberValid: function() {
-                return /^[A-Z0-9]{4}$/.test(this.vcselLotNumber);
+                return true;
             },
             //------------------------------------------------------------------------------------------------------
             requireVcselLotNumber: function() {
-                if(this.isVcselLotNumberValid()) {
-                    this.vcselLotNumberError = '';
-                    return true;
-                }
-
-                this.vcselLotNumberError = 'Put a four character lot number before the VCSEL test';
-                this.errorPromptMessage = this.vcselLotNumberError;
-                this.showErrorPrompt = true;
-                aniShowErrorPrompt().then(() => { }, () => { });
-                return false;
+                this.vcselLotNumber = '0000';
+                this.vcselLotNumberError = '';
+                return true;
             },
             //------------------------------------------------------------------------------------------------------
             captureVcselCameraResult: function(resultText) {
