@@ -55,13 +55,16 @@
           ]
         }
       ],
-      "publisherName": "Pertech Industries Inc."
+      "publisherName": "Pertech Industries, Inc.",
+      "certificateSha1": "E96F96E3BD87C4A0B081FD87A7E6CC7726499E9D"
+
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "shortcutName": "VCSEL"
     }
   },
   "author": "Pertech <development@pertechindustries.com>",
