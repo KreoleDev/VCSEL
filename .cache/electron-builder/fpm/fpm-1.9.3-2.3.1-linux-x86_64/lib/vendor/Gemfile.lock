@@ -1,0 +1,64 @@
+PATH
+  remote: .
+  specs:
+    fpm (1.9.3)
+      arr-pm (~> 0.0.10)
+      backports (>= 2.6.2)
+      cabin (>= 0.6.0)
+      childprocess
+      clamp (~> 1.0.0)
+      ffi
+      ruby-xz
+      stud
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    arr-pm (0.0.10)
+      cabin (> 0)
+    backports (3.6.8)
+    cabin (0.8.1)
+    childprocess (0.5.9)
+      ffi (~> 1.0, >= 1.0.11)
+    clamp (1.0.0)
+    coderay (1.1.1)
+    diff-lcs (1.2.5)
+    ffi (1.9.10)
+    insist (1.0.0)
+    io-like (0.3.0)
+    method_source (0.8.2)
+    pry (0.10.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    rake (11.1.2)
+    rspec (3.0.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+    rspec-core (3.0.4)
+      rspec-support (~> 3.0.0)
+    rspec-expectations (3.0.4)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.0.0)
+    rspec-mocks (3.0.4)
+      rspec-support (~> 3.0.0)
+    rspec-support (3.0.4)
+    ruby-xz (0.2.3)
+      ffi (~> 1.9)
+      io-like (~> 0.3)
+    slop (3.6.0)
+    stud (0.0.22)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  fpm!
+  insist (~> 1.0.0)
+  pry
+  rake (~> 11)
+  rspec (~> 3.0.0)
+
+BUNDLED WITH
+   1.13.1

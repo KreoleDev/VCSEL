@@ -1,7 +1,19 @@
-Run the Electron app on macOS
+Run the Electron app on Linux
 
 npm install
-npm run start:mac
+npm start
+
+Use Node 18 LTS or newer.
+
+
+Build the Linux AppImage and .deb package
+
+npm run dist
+
+
+Sign the release files
+
+./sign-linux-release.sh
 
 
 Cloud API used by the app

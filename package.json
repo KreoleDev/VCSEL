@@ -5,9 +5,8 @@
   "homepage": "https://productionapp.pertechindustries.com",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "start:mac": "./run-local-mac.sh",
-    "dist": "electron-builder --mac dmg",
+    "start": "./run-local-linux.sh",
+    "dist": "./build-production-linux.sh",
     "postinstall": "echo skip postinstall"
   },
   "keywords": [
@@ -35,37 +34,41 @@
       "!dist/**",
       "!node_modules/.cache/**",
       "!*.zip",
-      "!*.dmg",
       "!*.log",
       "!.git/**",
       "!.php-sessions/**",
       "!**/.DS_Store"
     ],
-    "mac": {
-      "icon": "./build/icons/icon.icns",
+    "linux": {
+      "icon": "./build/icons",
       "target": [
-        "dmg"
+        "AppImage",
+        "deb"
       ],
-      "category": "public.app-category.utilities",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.inherit.plist",
-      "extendInfo": {
-        "NSCameraUsageDescription": "VCSEL uses the camera built into the test fixture to measure light dot brightness and area."
-      },
-      "identity": "Pertech Industries Inc. (ZC2GFZLK83)",
-      "notarize": false
+      "category": "Utility"
     },
-    "dmg": {
-      "sign": true
-    },
-    "afterSign": "scripts/notarize.js"
+    "deb": {
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libuuid1",
+        "libsecret-1-0"
+      ],
+      "packageCategory": "utils",
+      "priority": "optional"
+    }
   },
   "author": "Pertech <development@pertechindustries.com>",
   "license": "CC0-1.0",
+  "engines": {
+    "node": ">=14.18.0"
+  },
   "devDependencies": {
-    "@electron/notarize": "^3.1.1",
     "electron": "^11.5.0",
     "electron-builder": "24.13.3"
   },
