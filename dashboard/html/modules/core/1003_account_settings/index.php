@@ -17,35 +17,50 @@ if($common['security']->check_rights(0)){
         global $common;
         
         $page_title='Account Settings';
+        $body_class='account_settings_page';
         require_once('common/includes/header_inner.inc.php');
             //find user account info
 	    $user_info=$common['db']->pec('SELECT first_name, last_name FROM core_users WHERE user_id=? LIMIT 1',array($_SESSION['user_id']),'i',array('first_name', 'last_name'));
             
             echo '<h2>'.$page_title.'</h2>';
-            echo $common['window']->begin($page_title . ': ' . $user_info[0]['first_name'] . ' ' . $user_info[0]['last_name'],false);
+            echo $common['window']->begin($page_title . ': ' . $user_info[0]['first_name'] . ' ' . $user_info[0]['last_name'],false,false,'account_settings_window');
                 $frm=new frm($values,$errors,$hidden);
-		echo $frm->begin_frm();
+		echo $frm->begin_frm('account_settings_form','account_settings_form');
                 
 		    echo $frm->begin_fieldset('General');
                         echo $frm->begin_dl('float');
-                            echo $frm->text('first_name','First Name:',true,24);
+                            echo '<dt class="locked_name"><label for="first_name_display">First Name:</label></dt>';
+                            echo '<dd class="locked_name"><input type="text" id="first_name_display" size="24" value="' . htmlspecialchars($user_info[0]['first_name'],ENT_QUOTES) . '" disabled="disabled" /></dd>';
 			echo $frm->end_dl();
 			
 			echo $frm->begin_dl('float');
-			    echo $frm->text('last_name','Last Name:',true,24);
+                            echo '<dt class="locked_name"><label for="last_name_display">Last Name:</label></dt>';
+                            echo '<dd class="locked_name"><input type="text" id="last_name_display" size="24" value="' . htmlspecialchars($user_info[0]['last_name'],ENT_QUOTES) . '" disabled="disabled" /></dd>';
 			echo $frm->end_dl();
 			
 			echo $frm->begin_dl('clear');
 			    echo $frm->text('position_title','Position Title:',true,48);
+			echo $frm->end_dl();
+
+			echo $frm->begin_dl('float');
 			    echo $frm->text('phone','Phone Number:',true,20,'','','','(999) 999-9999 x9999');
+			echo $frm->end_dl();
+
+			echo $frm->begin_dl('float');
 			    echo $frm->text('email','E-Mail Address:',true,48,'','','','user@domain.com');
 			echo $frm->end_dl();
                     echo $frm->end_fieldset();
                     
                     echo $frm->begin_fieldset('Password','Leave blank if you don\'t want to change password');
-                        echo $frm->begin_dl();
+                        echo $frm->begin_dl('float');
                             echo $frm->password('current_password','Current Password:',false,24);
+                        echo $frm->end_dl();
+
+                        echo $frm->begin_dl('float');
                             echo $frm->password('new_password','New Password:',false,24);
+                        echo $frm->end_dl();
+
+                        echo $frm->begin_dl('float');
 			    echo $frm->password('new2_password','Confirm Password:',false,24);
                         echo $frm->end_dl();
                     echo $frm->end_fieldset();
@@ -64,16 +79,6 @@ if($common['security']->check_rights(0)){
         function validate(){
 	global $common;
 	$errors=array();
-	
-	//Validate first name
-	if(empty($_POST['first_name'])){
-	    $errors['first_name']=array('First Name','Please include a first name');
-	}
-	
-	//Validate last name
-	if(empty($_POST['last_name'])){
-	    $errors['last_name']=array('Last Name','Please include a last name');
-	}
 	
 	//Validate position title
 	if(empty($_POST['position_title'])){
@@ -152,14 +157,14 @@ if($common['security']->check_rights(0)){
 		$salt = str_replace('+', '.', $salt);
 		$db_pw= sha1($_POST['new_password'] . $salt);
                 
-                $affected=$common['db']->pec('UPDATE core_users SET first_name=?, last_name=?, position_title=?, phone=?, email=?, password=?, salt=?, password_set_date=NOW()  WHERE user_id=? LIMIT 1',
-                    array($_POST['first_name'],$_POST['last_name'],$_POST['position_title'],$common['format']->unformat_phone($_POST['phone']),$_POST['email'],$db_pw,$salt,$_SESSION['user_id']),
-                    'sssssssi');
+                $affected=$common['db']->pec('UPDATE core_users SET position_title=?, phone=?, email=?, password=?, salt=?, password_set_date=NOW()  WHERE user_id=? LIMIT 1',
+                    array($_POST['position_title'],$common['format']->unformat_phone($_POST['phone']),$_POST['email'],$db_pw,$salt,$_SESSION['user_id']),
+                    'sssssi');
             }else{
                 //Update without password change
-                $affected=$common['db']->pec('UPDATE core_users SET first_name=?, last_name=?, position_title=?, phone=?, email=? WHERE user_id=? LIMIT 1',
-                    array($_POST['first_name'],$_POST['last_name'],$_POST['position_title'],$common['format']->unformat_phone($_POST['phone']),$_POST['email'],$_SESSION['user_id']),
-                    'sssssi');
+                $affected=$common['db']->pec('UPDATE core_users SET position_title=?, phone=?, email=? WHERE user_id=? LIMIT 1',
+                    array($_POST['position_title'],$common['format']->unformat_phone($_POST['phone']),$_POST['email'],$_SESSION['user_id']),
+                    'sssi');
             }
             
             //Create log entry

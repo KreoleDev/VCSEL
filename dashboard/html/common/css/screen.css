@@ -803,6 +803,178 @@ div.window{
             display:none;
         }
 
+body.account_settings_page{
+    background: #e9f5f7;
+    background: linear-gradient(135deg, #e3f5ef 0%, #eef7f8 45%, #dfedf2 100%);
+}
+
+body.account_settings_page #main_content{
+    right: 18px;
+}
+
+body.account_settings_page h2{
+    color: #1b3240;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 32px;
+    line-height: 40px;
+    margin: 4px 0 14px;
+}
+
+body.account_settings_page div.account_settings_window{
+    border: 1px solid #d5e3eb;
+    border-radius: 8px;
+    box-shadow: 0 18px 46px rgba(0, 68, 112, 0.14);
+    overflow: hidden;
+}
+
+body.account_settings_page div.account_settings_window div.win_title{
+    background: #00558c;
+    border-radius: 0;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 19px;
+    line-height: 46px;
+    padding: 0 22px;
+    text-shadow: none;
+}
+
+body.account_settings_page div.account_settings_window div.win_content{
+    padding: 22px;
+}
+
+body.account_settings_page form.account_settings_form{
+    padding-bottom: 0;
+}
+
+body.account_settings_page form.account_settings_form fieldset{
+    background: #fff;
+    border: 1px solid #d5e3eb;
+    border-radius: 8px;
+    box-shadow: none;
+    margin: 0 0 18px;
+    padding: 28px 18px 18px;
+}
+
+body.account_settings_page form.account_settings_form fieldset:last-child{
+    margin-bottom: 0;
+    padding: 18px;
+}
+
+body.account_settings_page form.account_settings_form fieldset legend{
+    background: #fff;
+    border: 1px solid #d5e3eb;
+    border-radius: 6px;
+    color: #1b3240;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 0;
+    padding: 5px 10px;
+}
+
+body.account_settings_page form.account_settings_form fieldset legend span{
+    color: #00558c;
+}
+
+body.account_settings_page form.account_settings_form dl{
+    box-sizing: border-box;
+    display: inline-block;
+    float: none;
+    padding: 0 12px 14px;
+    vertical-align: top;
+    width: 33.333%;
+}
+
+body.account_settings_page form.account_settings_form dl.clear{
+    clear: none;
+}
+
+body.account_settings_page form.account_settings_form dt{
+    color: #273d4d;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 22px;
+    padding-bottom: 6px;
+}
+
+body.account_settings_page form.account_settings_form dt.required{
+    color: #00558c;
+}
+
+body.account_settings_page form.account_settings_form dd{
+    padding-bottom: 0;
+}
+
+body.account_settings_page form.account_settings_form input[type=text],
+body.account_settings_page form.account_settings_form input[type=password]{
+    border: 1px solid #b8cad5;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: #1b3240;
+    font-size: 18px;
+    height: 42px;
+    line-height: 42px;
+    max-width: 100%;
+    padding: 0 12px;
+    width: 100%;
+}
+
+body.account_settings_page form.account_settings_form input[type=text]:focus,
+body.account_settings_page form.account_settings_form input[type=password]:focus{
+    background: #fff;
+    border-color: #00558c;
+    box-shadow: 0 0 0 4px rgba(0, 85, 140, 0.16);
+    outline: none;
+}
+
+body.account_settings_page form.account_settings_form input:disabled{
+    background: #eef6f3;
+    border-color: #c7dcd5;
+    color: #4c6573;
+    opacity: 1;
+}
+
+body.account_settings_page form.account_settings_form .locked_name label{
+    color: #4c6573;
+}
+
+body.account_settings_page form.account_settings_form dl.submit{
+    display: block;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+}
+
+body.account_settings_page form.account_settings_form dl.submit dd{
+    display: block;
+}
+
+body.account_settings_page form.account_settings_form dd button[type=submit]{
+    background: #00558c;
+    border: 0;
+    border-radius: 6px;
+    box-shadow: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 44px;
+    margin: 0;
+    min-width: 150px;
+    padding: 0 24px;
+}
+
+body.account_settings_page form.account_settings_form dd button[type=submit]:hover,
+body.account_settings_page form.account_settings_form dd button[type=submit]:focus{
+    background: #004b7c;
+    box-shadow: 0 0 0 3px rgba(0, 85, 140, 0.12);
+}
+
+body.account_settings_page form.account_settings_form .field_error input,
+body.account_settings_page form.account_settings_form .field_error textarea{
+    background: #fff;
+    border-color: #bd2f2f;
+    box-shadow: 0 0 0 3px rgba(189, 47, 47, 0.12);
+}
+
 #footer_spacer{
     height: 24px;
 }
@@ -1017,6 +1189,27 @@ footer{
 
     .app_download_grid{
         grid-template-columns:1fr;
+    }
+
+    body.account_settings_page #main_content{
+        right: 0;
+    }
+
+    body.account_settings_page div.account_settings_window{
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+    }
+
+    body.account_settings_page div.account_settings_window div.win_content{
+        padding: 14px;
+    }
+
+    body.account_settings_page form.account_settings_form dl{
+        display: block;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
     }
 }
 /*-----------------------------------------------------------------------------*/
