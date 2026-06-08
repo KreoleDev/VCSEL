@@ -212,7 +212,6 @@ function api_camera_testing_page($request){
     $columns = array(
         'ct.timestamp',
         'ct.tester_name',
-        'u.username',
         'ct.lot_number',
         'ct.serial_number',
         'ct.brightness',
@@ -261,7 +260,6 @@ function api_camera_testing_page($request){
         $data[] = array(
             api_camera_testing_html($row['timestamp']),
             api_camera_testing_html($row['tester_name']),
-            api_camera_testing_html($row['username']),
             api_camera_testing_html($row['lot_number']),
             api_camera_testing_html($row['serial_number']),
             api_camera_testing_html($row['brightness']),

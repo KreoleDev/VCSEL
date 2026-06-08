@@ -44,7 +44,6 @@ if($common['security']->check_rights(0)){
                     <tr>
                         <th>Date/Time</th>
                         <th>Tester</th>
-                        <th>Logged User</th>
                         <th>Lot</th>
                         <th>Serial Number</th>
                         <th>Brightness</th>
