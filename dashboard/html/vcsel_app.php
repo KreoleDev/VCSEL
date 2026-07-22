@@ -10,21 +10,25 @@ $server_file_check=array(__FILE__);
 
 function vcsel_app_download($platform,$app,$extensions){
     $folder=$app['folder'];
+    $patterns=isset($app['file_patterns']) && is_array($app['file_patterns'])?$app['file_patterns']:array('*');
     $locations=array(
         array(
             'dir'=>__DIR__ . '/downloads/' . $platform . '/' . $folder,
-            'url'=>'downloads/' . rawurlencode($platform) . '/' . rawurlencode($folder)
+            'url'=>'downloads/' . rawurlencode($platform) . '/' . rawurlencode($folder),
+            'patterns'=>array('*')
         ),
         array(
             'dir'=>__DIR__ . '/downloads/' . $folder . '/' . $platform,
-            'url'=>'downloads/' . rawurlencode($folder) . '/' . rawurlencode($platform)
+            'url'=>'downloads/' . rawurlencode($folder) . '/' . rawurlencode($platform),
+            'patterns'=>array('*')
         )
     );
 
     if(isset($app['legacy_platform_folder']) && $app['legacy_platform_folder']){
         $locations[]=array(
             'dir'=>__DIR__ . '/downloads/' . $platform,
-            'url'=>'downloads/' . rawurlencode($platform)
+            'url'=>'downloads/' . rawurlencode($platform),
+            'patterns'=>$patterns
         );
     }
 
@@ -33,15 +37,18 @@ function vcsel_app_download($platform,$app,$extensions){
             continue;
         }
 
-        foreach($extensions as $extension){
-            $matches=glob($location['dir'] . '/*.' . $extension);
-            if(!empty($matches)){
-                $path=$matches[0];
-                return array(
-                    'name'=>basename($path),
-                    'url'=>$location['url'] . '/' . rawurlencode(basename($path)),
-                    'size'=>filesize($path)
-                );
+        foreach($location['patterns'] as $pattern){
+            foreach($extensions as $extension){
+                $matches=glob($location['dir'] . '/' . $pattern . '.' . $extension);
+                if(!empty($matches)){
+                    sort($matches);
+                    $path=$matches[0];
+                    return array(
+                        'name'=>basename($path),
+                        'url'=>$location['url'] . '/' . rawurlencode(basename($path)),
+                        'size'=>filesize($path)
+                    );
+                }
             }
         }
     }
@@ -103,6 +110,8 @@ $apps=array(
         'title'=>'VCSEL App',
         'description'=>'Production app for VCSEL results and camera testing.',
         'required_modules'=>array(7001,7014),
+        'platforms'=>array('mac','windows','linux'),
+        'file_patterns'=>array('Pertech-VCSEL-*'),
         'legacy_platform_folder'=>true
     ),
     array(
@@ -110,7 +119,10 @@ $apps=array(
         'folder'=>'tally-reader',
         'title'=>'Tally Reader',
         'description'=>'Electron app for reading printer tally values.',
-        'required_modules'=>array(7015)
+        'required_modules'=>array(7015),
+        'platforms'=>array('windows'),
+        'file_patterns'=>array('Pertech-Tally-Reader-*'),
+        'legacy_platform_folder'=>true
     )
 );
 
@@ -124,15 +136,34 @@ function vcsel_app_user_can_download($app,$module_ids){
     return true;
 }
 
-require_once('common/includes/header_inner.inc.php');
+function vcsel_app_supports_platform($app,$platform_key){
+    return !isset($app['platforms']) || in_array($platform_key,$app['platforms']);
+}
 
-$download_module_ids=isset($session_module_ids)?$session_module_ids:array();
+function vcsel_app_session_module_ids(){
+    $module_ids=array();
+    if(isset($_SESSION['modules'])){
+        foreach($_SESSION['modules'] as $panel_modules){
+            foreach($panel_modules as $module){
+                if(isset($module['id'])){
+                    $module_ids[]=(int)$module['id'];
+                }
+            }
+        }
+    }
+
+    return $module_ids;
+}
+
+$download_module_ids=vcsel_app_session_module_ids();
 $allowed_apps=array();
 foreach($apps as $app){
     if(vcsel_app_user_can_download($app,$download_module_ids)){
         $allowed_apps[]=$app;
     }
 }
+
+require_once('common/includes/header_inner.inc.php');
 ?>
 <div class="app_download_page">
     <div class="app_download_header">
@@ -154,9 +185,15 @@ foreach($apps as $app){
                         echo '<span class="app_platform_chevron" aria-hidden="true">+</span>';
                     echo '</button>';
                     echo '<div id="' . $panel_id . '" class="app_download_panel" hidden>';
-                        if(!empty($allowed_apps)){
+                        $platform_apps=array();
+                        foreach($allowed_apps as $app){
+                            if(vcsel_app_supports_platform($app,$platform['key'])){
+                                $platform_apps[]=$app;
+                            }
+                        }
+                        if(!empty($platform_apps)){
                             echo '<div class="app_download_list">';
-                            foreach($allowed_apps as $app){
+                            foreach($platform_apps as $app){
                                 $download=vcsel_app_download($platform['key'],$app,$platform['extensions']);
                                 echo '<div class="app_download_item">';
                                     echo '<div class="app_download_item_info">';
@@ -175,7 +212,7 @@ foreach($apps as $app){
                             }
                             echo '</div>';
                         }else{
-                            echo '<p>No app downloads are available for your account.</p>';
+                            echo '<p>No app downloads are available for this platform.</p>';
                         }
                     echo '</div>';
                 echo '</div>';

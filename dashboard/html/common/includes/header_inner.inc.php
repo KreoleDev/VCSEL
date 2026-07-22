@@ -66,7 +66,7 @@ if(isset($server_file_check)){
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8" />
-    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--[if lt IE 9]>
     	<script src="common/js/html5shiv.min.js"></script>
     	<script src="common/js/respond.min.js"></script>
@@ -74,13 +74,14 @@ if(isset($server_file_check)){
     <title><?=CFG_CMS_NAME; ?><?=isset($page_title)?': ' . $page_title:''; ?></title>
     <link rel="icon" type="image/png" href="<?=CFG_CMS_BASE_URL; ?>common/images/favicon.png" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/reset.css" type="text/css" media="screen, projection" />
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/frm.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/js/datatables/css/jquery.dataTables.min.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/js/jquery-ui-1.11.4.custom/jquery-ui.min.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/screen.css?v=20260722_apps_menu" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/print.css" type="text/css" media="print" />
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no">
     <link rel="apple-touch-icon" href="<?=CFG_CMS_BASE_URL; ?>common/images/favicon_large.png"/>
