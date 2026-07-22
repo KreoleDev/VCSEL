@@ -11,17 +11,41 @@ if(isset($_SESSION['mod_id'])){
     $common['db']->pec('INSERT INTO core_user_module_actions SET ext_user_id=?, ext_module_id=?, action="Load Page", datetime=NOW(), remote_address=?',array($_SESSION['user_id'],$_SESSION['mod_id'],$_SERVER['REMOTE_ADDR']),'iis');
 }
 
-// Keep admin menus current when modules are added after the admin logged in.
+// Keep menus current when modules or rights are changed after the user logged in.
 if(isset($_SESSION['user_id'])){
+    $_SESSION['modules']=array();
+    $loaded_module_ids=array();
     $admin_info=$common['db']->pec('SELECT count(*) FROM core_user_group_lookup WHERE ext_user_id=? AND ext_group_id=2 LIMIT 1',array($_SESSION['user_id']),'i',array('count'));
     if(!empty($admin_info) && $admin_info[0]['count']==1){
-        $_SESSION['modules']=array();
         $results=$common['db']->pec('SELECT module_id, title, path, ext_panel_id, sort_order FROM core_modules ORDER BY ext_panel_id, sort_order, title',array(),'',array('module_id', 'title', 'path', 'ext_panel_id', 'sort_order'));
         foreach($results as $row){
             $_SESSION['modules'][$row['ext_panel_id']][$row['sort_order'] . '_' . $row['module_id']]['id']=$row['module_id'];
             $_SESSION['modules'][$row['ext_panel_id']][$row['sort_order'] . '_' . $row['module_id']]['title']=$row['title'];
             $_SESSION['modules'][$row['ext_panel_id']][$row['sort_order'] . '_' . $row['module_id']]['path']=$row['path'];
         }
+    }else{
+        $results=$common['db']->pec('SELECT module_id, title, path, ext_panel_id, sort_order FROM core_modules WHERE module_id IN(SELECT ext_module_id FROM core_group_rights WHERE (ext_group_id=1 OR ext_group_id IN(SELECT ext_group_id FROM core_user_group_lookup WHERE ext_user_id=?))) ORDER BY ext_panel_id, sort_order, title',array($_SESSION['user_id']),'i',array('module_id', 'title', 'path', 'ext_panel_id', 'sort_order'));
+        foreach($results as $row){
+            $module_key=$row['sort_order'] . '_' . $row['module_id'];
+            $_SESSION['modules'][$row['ext_panel_id']][$module_key]['id']=$row['module_id'];
+            $_SESSION['modules'][$row['ext_panel_id']][$module_key]['title']=$row['title'];
+            $_SESSION['modules'][$row['ext_panel_id']][$module_key]['path']=$row['path'];
+            $loaded_module_ids[$row['module_id']]=true;
+        }
+
+        $results=$common['db']->pec('SELECT module_id, title, path, ext_panel_id, sort_order FROM core_modules WHERE module_id IN(SELECT ext_module_id FROM core_user_rights WHERE ext_user_id=?) ORDER BY ext_panel_id, sort_order, title',array($_SESSION['user_id']),'i',array('module_id', 'title', 'path', 'ext_panel_id', 'sort_order'));
+        foreach($results as $row){
+            if(isset($loaded_module_ids[$row['module_id']])){
+                continue;
+            }
+            $module_key=$row['sort_order'] . '_' . $row['module_id'];
+            $_SESSION['modules'][$row['ext_panel_id']][$module_key]['id']=$row['module_id'];
+            $_SESSION['modules'][$row['ext_panel_id']][$module_key]['title']=$row['title'];
+            $_SESSION['modules'][$row['ext_panel_id']][$module_key]['path']=$row['path'];
+        }
+    }
+    foreach($_SESSION['modules'] as $panel_id=>$panel_modules){
+        ksort($_SESSION['modules'][$panel_id]);
     }
 }
 
@@ -147,6 +171,16 @@ if(count($profile_name_parts)>1 && !empty($profile_name_parts[count($profile_nam
     $profile_initials.=substr($profile_name_parts[count($profile_name_parts)-1],0,1);
 }
 $profile_initials=strtoupper($profile_initials);
+$session_module_ids=array();
+if(isset($_SESSION['modules'])){
+    foreach($_SESSION['modules'] as $panel_modules){
+        foreach($panel_modules as $module){
+            if(isset($module['id'])){
+                $session_module_ids[]=(int)$module['id'];
+            }
+        }
+    }
+}
 ?>
 <body<?=!empty($body_classes)?' class="' . implode(' ',$body_classes) . '"':''; ?>>
     <header>
@@ -161,16 +195,12 @@ $profile_initials=strtoupper($profile_initials);
 	<div id="profile_actions">
 	    <?php if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){ ?>
 		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a>
-		<?php if(isset($_SESSION['modules'])){
-		    foreach($_SESSION['modules'] as $panel_modules){
-			foreach($panel_modules as $module){
-			    if(isset($module['id']) && $module['id']==7014){ ?>
+		<?php if(in_array(7014,$session_module_ids)){ ?>
 		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7014_camera_testing/index.php?mod_id=7014" title="Camera Testing">Camera Testing</a>
-			    <?php
-			    }
-			}
-		    }
-		} ?>
+		<?php } ?>
+		<?php if(in_array(7015,$session_module_ids)){ ?>
+		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7015_tally_reader/index.php?mod_id=7015" title="Tally Reader">Tally Reader</a>
+		<?php } ?>
 		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="VCSEL App">VCSEL App</a>
 	    <?php } ?>
 	    <button id="profile_menu_btn" type="button">
