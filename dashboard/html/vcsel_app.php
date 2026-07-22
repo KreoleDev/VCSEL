@@ -143,37 +143,64 @@ foreach($apps as $app){
     <div class="app_download_grid">
         <?php
         foreach($platforms as $platform){
+                $panel_id='app_download_panel_' . $platform['key'];
                 echo '<div class="app_download_card">';
-                    echo '<div class="app_download_icon platform_' . $platform['key'] . '">' . vcsel_app_logo($platform['key']) . '</div>';
-                    echo '<h3>' . $platform['title'] . '</h3>';
-                    if(!empty($allowed_apps)){
-                        echo '<div class="app_download_list">';
-                        foreach($allowed_apps as $app){
-                            $download=vcsel_app_download($platform['key'],$app,$platform['extensions']);
-                            echo '<div class="app_download_item">';
-                                echo '<div class="app_download_item_info">';
-                                    echo '<strong>' . htmlspecialchars($app['title'],ENT_QUOTES) . '</strong>';
-                                    echo '<span>' . htmlspecialchars($app['description'],ENT_QUOTES) . '</span>';
+                    echo '<button class="app_platform_button" type="button" aria-expanded="false" aria-controls="' . $panel_id . '">';
+                        echo '<span class="app_download_icon platform_' . $platform['key'] . '">' . vcsel_app_logo($platform['key']) . '</span>';
+                        echo '<span class="app_platform_text">';
+                            echo '<span class="app_platform_title">' . $platform['title'] . '</span>';
+                            echo '<span class="app_platform_hint">View available downloads</span>';
+                        echo '</span>';
+                        echo '<span class="app_platform_chevron" aria-hidden="true">+</span>';
+                    echo '</button>';
+                    echo '<div id="' . $panel_id . '" class="app_download_panel" hidden>';
+                        if(!empty($allowed_apps)){
+                            echo '<div class="app_download_list">';
+                            foreach($allowed_apps as $app){
+                                $download=vcsel_app_download($platform['key'],$app,$platform['extensions']);
+                                echo '<div class="app_download_item">';
+                                    echo '<div class="app_download_item_info">';
+                                        echo '<strong>' . htmlspecialchars($app['title'],ENT_QUOTES) . '</strong>';
+                                        echo '<span>' . htmlspecialchars($app['description'],ENT_QUOTES) . '</span>';
+                                        if($download){
+                                            echo '<em>' . htmlspecialchars($download['name'],ENT_QUOTES) . (!empty($download['size'])?' - ' . vcsel_app_size($download['size']):'') . '</em>';
+                                        }
+                                    echo '</div>';
                                     if($download){
-                                        echo '<em>' . htmlspecialchars($download['name'],ENT_QUOTES) . (!empty($download['size'])?' - ' . vcsel_app_size($download['size']):'') . '</em>';
+                                        echo '<a href="' . $download['url'] . '" download>Download</a>';
+                                    }else{
+                                        echo '<button type="button" disabled>Unavailable</button>';
                                     }
                                 echo '</div>';
-                                if($download){
-                                    echo '<a href="' . $download['url'] . '" download>Download</a>';
-                                }else{
-                                    echo '<button type="button" disabled>Unavailable</button>';
-                                }
+                            }
                             echo '</div>';
+                        }else{
+                            echo '<p>No app downloads are available for your account.</p>';
                         }
-                        echo '</div>';
-                    }else{
-                        echo '<p>No app downloads are available for your account.</p>';
-                    }
+                    echo '</div>';
                 echo '</div>';
         }
         ?>
     </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.app_platform_button').click(function(){
+        var panel_id=$(this).attr('aria-controls');
+        var is_open=$(this).attr('aria-expanded')==='true';
+
+        $('.app_platform_button').attr('aria-expanded','false');
+        $('.app_download_panel').prop('hidden',true);
+        $('.app_download_card').removeClass('open');
+
+        if(!is_open){
+            $(this).attr('aria-expanded','true');
+            $('#' + panel_id).prop('hidden',false);
+            $(this).closest('.app_download_card').addClass('open');
+        }
+    });
+});
+</script>
 <?php
 require_once('common/includes/footer_inner.inc.php');
 ?>

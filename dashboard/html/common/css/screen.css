@@ -1026,6 +1026,7 @@ footer{
     display:grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap:18px;
+    align-items:start;
 }
 
 .app_download_card{
@@ -1034,19 +1035,63 @@ footer{
     border-radius:8px;
     box-shadow:0 12px 32px rgba(36,76,94,0.10);
     box-sizing:border-box;
-    min-height:320px;
-    padding:26px;
+    overflow:hidden;
+    min-height:0;
+    padding:0;
 }
+    .app_download_card.open{
+        border-color:#9cc6df;
+        box-shadow:0 14px 34px rgba(7,87,142,0.16);
+    }
+    .app_download_card > .app_platform_button{
+        align-items:center;
+        background:linear-gradient(180deg,#ffffff 0%,#f8fbfd 100%) !important;
+        border:0 !important;
+        box-sizing:border-box;
+        cursor:pointer;
+        display:flex;
+        gap:18px;
+        line-height:normal !important;
+        margin:0 !important;
+        min-height:172px;
+        padding:30px 32px !important;
+        position:relative;
+        text-align:left;
+        width:100%;
+    }
+        .app_download_card > .app_platform_button:before{
+            background:#52b340;
+            content:"";
+            height:4px;
+            left:0;
+            position:absolute;
+            right:0;
+            top:0;
+        }
+        .app_download_card > .app_platform_button:hover,
+        .app_download_card > .app_platform_button:focus{
+            background:#f7fbfd !important;
+        }
+        .app_platform_button:hover .app_platform_title,
+        .app_platform_button:focus .app_platform_title{
+            color:#07578e;
+        }
+        .app_download_card.open > .app_platform_button{
+            background:#f7fbfd !important;
+            border-bottom:1px solid #d6e4ec;
+            min-height:118px;
+        }
     .app_download_icon{
         align-items:center;
         background:#eef6f3;
         border-radius:8px;
+        box-shadow:0 0 0 1px rgba(7,87,142,0.05);
         color:#07578e;
         display:flex;
+        flex:0 0 64px;
         height:58px;
         justify-content:center;
-        margin-bottom:20px;
-        width:58px;
+        width:64px;
     }
         .app_download_icon svg{
             display:block;
@@ -1058,28 +1103,57 @@ footer{
             height:38px;
             width:38px;
         }
-    .app_download_card h3{
-        color:#123040;
-        font-size:24px;
-        line-height:32px;
-        margin-bottom:16px;
+    .app_platform_text{
+        display:block;
+        min-width:0;
     }
+    .app_platform_title{
+        color:#123040;
+        display:block;
+        font-size:30px;
+        font-weight:bold;
+        line-height:36px;
+    }
+    .app_platform_hint{
+        color:#4d6170;
+        display:block;
+        font-size:14px;
+        line-height:20px;
+        padding-top:6px;
+    }
+    .app_platform_chevron{
+        align-items:center;
+        border:1px solid #bfd8e8;
+        border-radius:50%;
+        color:#07578e;
+        display:flex;
+        font-size:22px;
+        font-weight:bold;
+        height:34px;
+        justify-content:center;
+        line-height:30px;
+        margin-left:auto;
+        width:34px;
+    }
+        .app_download_card.open .app_platform_chevron{
+            background:#07578e;
+            border-color:#07578e;
+            color:#fff;
+        }
+        .app_download_card.open .app_platform_chevron:before{
+            content:"-";
+        }
+        .app_download_card.open .app_platform_chevron{
+            font-size:0;
+        }
     .app_download_card p{
         color:#4d6170;
         line-height:22px;
-        padding:0 0 18px;
+        padding:20px 26px;
         text-align:left;
     }
-    .app_download_card span{
-        color:#60708d;
-        display:block;
-        font-size:13px;
-        line-height:18px;
-        min-height:36px;
-        word-break:break-word;
-    }
-    .app_download_card a,
-    .app_download_card button{
+    .app_download_item a,
+    .app_download_item button{
         background:#07578e;
         border:0;
         border-radius:6px;
@@ -1089,27 +1163,36 @@ footer{
         font-size:16px;
         font-weight:bold;
         line-height:44px;
-        margin-top:20px;
+        margin-top:14px;
         text-align:center;
         text-decoration:none;
         width:100%;
     }
-    .app_download_card button{
+    .app_download_item button{
         background:#dce5ec;
         color:#748491;
         cursor:not-allowed;
     }
 
+    .app_download_panel[hidden]{
+        display:none;
+    }
+    .app_download_panel{
+        padding:6px 26px 26px;
+    }
     .app_download_list{
-        border-top:1px solid #e3edf3;
+        border-top:0;
     }
         .app_download_item{
-            border-bottom:1px solid #e3edf3;
-            padding:16px 0;
+            background:#fff;
+            border:1px solid #dfeaf1;
+            border-radius:8px;
+            box-shadow:0 8px 18px rgba(36,76,94,0.06);
+            margin-top:16px;
+            padding:18px;
         }
             .app_download_item:last-child{
-                border-bottom:0;
-                padding-bottom:0;
+                margin-bottom:0;
             }
         .app_download_item_info{
             min-width:0;
@@ -1117,8 +1200,8 @@ footer{
             .app_download_item_info strong{
                 color:#123040;
                 display:block;
-                font-size:17px;
-                line-height:22px;
+                font-size:18px;
+                line-height:23px;
             }
             .app_download_item_info span{
                 color:#4d6170;
@@ -1137,10 +1220,6 @@ footer{
                 overflow-wrap:anywhere;
                 padding-top:5px;
             }
-        .app_download_item a,
-        .app_download_item button{
-            width:100%;
-        }
     
 #menu_overlay{
     width:100%;

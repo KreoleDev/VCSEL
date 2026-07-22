@@ -78,7 +78,7 @@ if(isset($server_file_check)){
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/frm.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/js/datatables/css/jquery.dataTables.min.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/js/jquery-ui-1.11.4.custom/jquery-ui.min.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/screen.css?v=20260722_apps" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/print.css" type="text/css" media="print" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
