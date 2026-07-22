@@ -1034,7 +1034,7 @@ footer{
     border-radius:8px;
     box-shadow:0 12px 32px rgba(36,76,94,0.10);
     box-sizing:border-box;
-    min-height:260px;
+    min-height:320px;
     padding:26px;
 }
     .app_download_icon{
@@ -1062,7 +1062,7 @@ footer{
         color:#123040;
         font-size:24px;
         line-height:32px;
-        margin-bottom:8px;
+        margin-bottom:16px;
     }
     .app_download_card p{
         color:#4d6170;
@@ -1099,6 +1099,48 @@ footer{
         color:#748491;
         cursor:not-allowed;
     }
+
+    .app_download_list{
+        border-top:1px solid #e3edf3;
+    }
+        .app_download_item{
+            border-bottom:1px solid #e3edf3;
+            padding:16px 0;
+        }
+            .app_download_item:last-child{
+                border-bottom:0;
+                padding-bottom:0;
+            }
+        .app_download_item_info{
+            min-width:0;
+        }
+            .app_download_item_info strong{
+                color:#123040;
+                display:block;
+                font-size:17px;
+                line-height:22px;
+            }
+            .app_download_item_info span{
+                color:#4d6170;
+                display:block;
+                font-size:13px;
+                line-height:18px;
+                min-height:0;
+                padding-top:3px;
+            }
+            .app_download_item_info em{
+                color:#60708d;
+                display:block;
+                font-size:12px;
+                font-style:normal;
+                line-height:17px;
+                overflow-wrap:anywhere;
+                padding-top:5px;
+            }
+        .app_download_item a,
+        .app_download_item button{
+            width:100%;
+        }
     
 #menu_overlay{
     width:100%;

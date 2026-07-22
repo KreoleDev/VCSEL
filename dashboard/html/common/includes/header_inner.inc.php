@@ -201,7 +201,7 @@ if(isset($_SESSION['modules'])){
 		<?php if(in_array(7015,$session_module_ids)){ ?>
 		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7015_tally_reader/index.php?mod_id=7015" title="Tally Reader">Tally Reader</a>
 		<?php } ?>
-		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="VCSEL App">VCSEL App</a>
+		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="APPS">APPS</a>
 	    <?php } ?>
 	    <button id="profile_menu_btn" type="button">
 		<span class="profile_initials"><?=htmlspecialchars($profile_initials,ENT_QUOTES); ?></span>
@@ -246,7 +246,7 @@ if(isset($_SESSION['modules'])){
 	}
     $vcsel_app_active=basename($_SERVER['SCRIPT_NAME'])=='vcsel_app.php'?' class="active"':'';
     echo '<dl><dt>Downloads</dt>';
-        echo '<dd><a' . $vcsel_app_active . ' href="' . CFG_CMS_BASE_URL . 'vcsel_app.php" title="VCSEL APP">VCSEL APP</a></dd>';
+        echo '<dd><a' . $vcsel_app_active . ' href="' . CFG_CMS_BASE_URL . 'vcsel_app.php" title="APPS">APPS</a></dd>';
     echo '</dl>';
 	?>
     </div>

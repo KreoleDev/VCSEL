@@ -5,24 +5,44 @@
 
 require_once('common/includes/std_lib.inc.php');
 
-$page_title='VCSEL App';
+$page_title='APPS';
 $server_file_check=array(__FILE__);
 
-function vcsel_app_download($folder,$extensions){
-    $base_dir=__DIR__ . '/downloads/' . $folder;
-    if(!is_dir($base_dir)){
-        return false;
+function vcsel_app_download($platform,$app,$extensions){
+    $folder=$app['folder'];
+    $locations=array(
+        array(
+            'dir'=>__DIR__ . '/downloads/' . $platform . '/' . $folder,
+            'url'=>'downloads/' . rawurlencode($platform) . '/' . rawurlencode($folder)
+        ),
+        array(
+            'dir'=>__DIR__ . '/downloads/' . $folder . '/' . $platform,
+            'url'=>'downloads/' . rawurlencode($folder) . '/' . rawurlencode($platform)
+        )
+    );
+
+    if(isset($app['legacy_platform_folder']) && $app['legacy_platform_folder']){
+        $locations[]=array(
+            'dir'=>__DIR__ . '/downloads/' . $platform,
+            'url'=>'downloads/' . rawurlencode($platform)
+        );
     }
 
-    foreach($extensions as $extension){
-        $matches=glob($base_dir . '/*.' . $extension);
-        if(!empty($matches)){
-            $path=$matches[0];
-            return array(
-                'name'=>basename($path),
-                'url'=>'downloads/' . rawurlencode($folder) . '/' . rawurlencode(basename($path)),
-                'size'=>filesize($path)
-            );
+    foreach($locations as $location){
+        if(!is_dir($location['dir'])){
+            continue;
+        }
+
+        foreach($extensions as $extension){
+            $matches=glob($location['dir'] . '/*.' . $extension);
+            if(!empty($matches)){
+                $path=$matches[0];
+                return array(
+                    'name'=>basename($path),
+                    'url'=>$location['url'] . '/' . rawurlencode(basename($path)),
+                    'size'=>filesize($path)
+                );
+            }
         }
     }
 
@@ -62,42 +82,92 @@ $platforms=array(
     array(
         'key'=>'mac',
         'title'=>'Mac',
-        'description'=>'Download the VCSEL App installer for macOS.',
         'extensions'=>array('dmg')
     ),
     array(
         'key'=>'windows',
         'title'=>'Windows',
-        'description'=>'Windows installer will appear here when uploaded.',
         'extensions'=>array('exe','msi','zip')
     ),
     array(
         'key'=>'linux',
         'title'=>'Linux',
-        'description'=>'Linux package will appear here when uploaded.',
         'extensions'=>array('AppImage','deb','rpm','tar.gz','zip')
     )
 );
 
+$apps=array(
+    array(
+        'key'=>'vcsel-app',
+        'folder'=>'vcsel-app',
+        'title'=>'VCSEL App',
+        'description'=>'Production app for VCSEL results and camera testing.',
+        'required_modules'=>array(7001,7014),
+        'legacy_platform_folder'=>true
+    ),
+    array(
+        'key'=>'tally-reader',
+        'folder'=>'tally-reader',
+        'title'=>'Tally Reader',
+        'description'=>'Electron app for reading printer tally values.',
+        'required_modules'=>array(7015)
+    )
+);
+
+function vcsel_app_user_can_download($app,$module_ids){
+    foreach($app['required_modules'] as $module_id){
+        if(!in_array($module_id,$module_ids)){
+            return false;
+        }
+    }
+
+    return true;
+}
+
 require_once('common/includes/header_inner.inc.php');
+
+$download_module_ids=isset($session_module_ids)?$session_module_ids:array();
+$allowed_apps=array();
+foreach($apps as $app){
+    if(vcsel_app_user_can_download($app,$download_module_ids)){
+        $allowed_apps[]=$app;
+    }
+}
 ?>
 <div class="app_download_page">
     <div class="app_download_header">
-        <h2>VCSEL App</h2>
-        <p>Select your operating system to download the production app.</p>
+        <h2>APPS</h2>
+        <p>Select your operating system and download the apps available to your account.</p>
     </div>
 
     <div class="app_download_grid">
         <?php
         foreach($platforms as $platform){
-            $download=vcsel_app_download($platform['key'],$platform['extensions']);
                 echo '<div class="app_download_card">';
                     echo '<div class="app_download_icon platform_' . $platform['key'] . '">' . vcsel_app_logo($platform['key']) . '</div>';
                     echo '<h3>' . $platform['title'] . '</h3>';
-                    if($download){
-                        echo '<a href="' . $download['url'] . '" download>Download</a>';
+                    if(!empty($allowed_apps)){
+                        echo '<div class="app_download_list">';
+                        foreach($allowed_apps as $app){
+                            $download=vcsel_app_download($platform['key'],$app,$platform['extensions']);
+                            echo '<div class="app_download_item">';
+                                echo '<div class="app_download_item_info">';
+                                    echo '<strong>' . htmlspecialchars($app['title'],ENT_QUOTES) . '</strong>';
+                                    echo '<span>' . htmlspecialchars($app['description'],ENT_QUOTES) . '</span>';
+                                    if($download){
+                                        echo '<em>' . htmlspecialchars($download['name'],ENT_QUOTES) . (!empty($download['size'])?' - ' . vcsel_app_size($download['size']):'') . '</em>';
+                                    }
+                                echo '</div>';
+                                if($download){
+                                    echo '<a href="' . $download['url'] . '" download>Download</a>';
+                                }else{
+                                    echo '<button type="button" disabled>Unavailable</button>';
+                                }
+                            echo '</div>';
+                        }
+                        echo '</div>';
                     }else{
-                        echo '<button type="button" disabled>Unavailable</button>';
+                        echo '<p>No app downloads are available for your account.</p>';
                     }
                 echo '</div>';
         }
