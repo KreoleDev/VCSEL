@@ -59,5 +59,10 @@ The Electron production app API contract lives in:
 - `getCameraTesting`: returns camera testing result rows.
 - `getCameraTestingPage`: returns one server-side DataTables page of camera testing result rows.
 
+### `printer-tally-reads.php`
+- `savePrinterTallyRead`: saves one Tally Reader printer read row.
+- `getPrinterTallyReads`: returns printer tally read rows.
+- `getPrinterTallyReadsPage`: returns one server-side DataTables page of printer tally read rows.
+
 ### `7680-board-tests.php`
 - `saveBoardTestResults`

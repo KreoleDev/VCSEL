@@ -21,6 +21,7 @@ Endpoints:
 - `POST /API/apps-api/7680-board-tests/`
 - `POST /API/apps-api/shipping-tests/`
 - `POST /API/apps-api/camera-testing/`
+- `POST /API/apps-api/printer-tally-reads/`
 
 The implementation preserves the response shapes from the existing production API. Static product images and firmware files remain available under `/production/lib/images/` and `/production/uploads/firmwares/7680/`.
 

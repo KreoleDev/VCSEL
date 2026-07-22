@@ -724,6 +724,79 @@ Allowed methods:
 POST, GET, OPTIONS
 ```
 
+## Tally Reader APIs
+
+Base endpoint:
+
+```text
+POST /printer-tally-reads/
+```
+
+### Save Printer Tally Read
+
+Request:
+
+```json
+{
+  "mode": "savePrinterTallyRead",
+  "logged_in_user_id": 123,
+  "logged_in_username": "operator",
+  "user_name": "Operator Name",
+  "read_at": "2026-07-21T19:45:00.000Z",
+  "printer_name": "PRI USB Printer",
+  "usb_vendor_id": 5169,
+  "usb_product_id": 30336,
+  "usb_device_serial": "USB123",
+  "manufacturer_serial_number": "76805555555555",
+  "dot_count": "0018467496",
+  "form_count": "0000002397",
+  "void_count": "0000000006",
+  "burst_count": "0000002339",
+  "vault_install_count": "0000000061",
+  "total_time_on_hours": "0000000812",
+  "printer_resets": "0000000161",
+  "firmware_updates_count": "0000000055",
+  "external_sheets_loaded": "0000000036",
+  "ribbon_count": "0000000003",
+  "last_ribbon_change_dot_count": "0015830714",
+  "read_success": true,
+  "read_error": "",
+  "raw_serial_ascii": "76805555555555\r",
+  "raw_tally_ascii": "0018467496\r0000002397\r..."
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "id": "123"
+}
+```
+
+### Read Printer Tally Rows
+
+Dashboard/API readers can use:
+
+```json
+{
+  "mode": "getPrinterTallyReads",
+  "limit": 200
+}
+```
+
+or a server-side DataTables request:
+
+```json
+{
+  "mode": "getPrinterTallyReadsPage",
+  "draw": 1,
+  "start": 0,
+  "length": 20
+}
+```
+
 ## Important Compatibility Notes
 
 - Keep the response shapes as shown above unless the Electron app is updated at the same time.

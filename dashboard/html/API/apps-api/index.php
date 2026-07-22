@@ -15,7 +15,8 @@ apps_api_emit_json(array(
         '7680_vcsel_tests' => apps_api_base_url() . '7680-vcsel-tests/',
         '7680_board_tests' => apps_api_base_url() . '7680-board-tests/',
         'shipping_tests' => apps_api_base_url() . 'shipping-tests/',
-        'camera_testing' => apps_api_base_url() . 'camera-testing/'
+        'camera_testing' => apps_api_base_url() . 'camera-testing/',
+        'printer_tally_reads' => apps_api_base_url() . 'printer-tally-reads/'
     )
 ));
 ?>
