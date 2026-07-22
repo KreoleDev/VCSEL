@@ -27,8 +27,7 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [
-            { "className": "tally_reader_number", "targets": [4, 5, 6, 7, 8, 9, 10, 11, 12] },
-            { "orderable": false, "targets": [13] }
+            { "className": "tally_reader_number", "targets": [4, 5, 6, 7, 8, 9, 10, 11, 12] }
         ],
         "fnInitComplete": function(){
             $("#page_progress_dialog").removeClass("is_visible").attr("aria-hidden","true");
@@ -75,7 +74,6 @@ if($common['security']->check_rights(0)){
                         <th>Resets</th>
                         <th>Firmware Updates</th>
                         <th>Last Ribbon Dot Count</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

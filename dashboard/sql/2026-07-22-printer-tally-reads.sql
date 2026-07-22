@@ -22,8 +22,6 @@ CREATE TABLE IF NOT EXISTS printer_tally_reads (
     ribbon_count BIGINT NULL,
     last_ribbon_change_dot_count BIGINT NULL,
 
-    read_success TINYINT(1) NOT NULL DEFAULT 0,
-    read_error VARCHAR(1000) NULL,
     raw_serial_ascii VARCHAR(100) NULL,
     raw_tally_ascii VARCHAR(500) NULL,
 
@@ -32,8 +30,7 @@ CREATE TABLE IF NOT EXISTS printer_tally_reads (
     PRIMARY KEY (id),
     INDEX idx_printer_tally_reads_read_at (read_at),
     INDEX idx_printer_tally_reads_manufacturer_serial_number (manufacturer_serial_number),
-    INDEX idx_printer_tally_reads_user_id (user_id),
-    INDEX idx_printer_tally_reads_read_success (read_success)
+    INDEX idx_printer_tally_reads_user_id (user_id)
 );
 
 INSERT INTO core_modules (module_id, title, path, ext_panel_id, sort_order)

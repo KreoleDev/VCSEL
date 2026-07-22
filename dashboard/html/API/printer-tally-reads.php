@@ -144,10 +144,10 @@ function api_printer_tally_reads_build_where($search=''){
     $types = $filter['types'];
 
     if($search !== ''){
-        $clauses[] = '(ptr.read_at LIKE ? OR ptr.user_id LIKE ? OR ptr.user_name LIKE ? OR ptr.printer_name LIKE ? OR ptr.usb_device_serial LIKE ? OR ptr.manufacturer_serial_number LIKE ? OR ptr.read_error LIKE ?)';
+        $clauses[] = '(ptr.read_at LIKE ? OR ptr.user_id LIKE ? OR ptr.user_name LIKE ? OR ptr.printer_name LIKE ? OR ptr.usb_device_serial LIKE ? OR ptr.manufacturer_serial_number LIKE ?)';
         $like = '%' . $search . '%';
-        $params = array_merge($params, array($like, $like, $like, $like, $like, $like, $like));
-        $types .= 'sssssss';
+        $params = array_merge($params, array($like, $like, $like, $like, $like, $like));
+        $types .= 'ssssss';
     }
 
     return array(
@@ -168,8 +168,6 @@ function api_printer_tally_reads_save($request){
     $usbProductId = api_printer_tally_reads_int_or_null(api_printer_tally_reads_request_value($request, array('usb_product_id', 'usbProductId', 'product_id', 'productId'), null));
     $usbDeviceSerial = trim((string)api_printer_tally_reads_request_value($request, array('usb_device_serial', 'usbDeviceSerial', 'serial_number', 'serialNumber'), ''));
     $manufacturerSerialNumber = trim((string)api_printer_tally_reads_request_value($request, array('manufacturer_serial_number', 'manufacturerSerialNumber', 'manufacturer_serial', 'manufacturerSerial'), ''));
-    $readSuccess = api_printer_tally_reads_bool(api_printer_tally_reads_request_value($request, array('read_success', 'readSuccess', 'success'), true));
-    $readError = trim((string)api_printer_tally_reads_request_value($request, array('read_error', 'readError', 'error'), ''));
     $rawSerialAscii = (string)api_printer_tally_reads_request_value($request, array('raw_serial_ascii', 'rawSerialAscii'), '');
     $rawTallyAscii = (string)api_printer_tally_reads_request_value($request, array('raw_tally_ascii', 'rawTallyAscii'), '');
 
@@ -187,10 +185,10 @@ function api_printer_tally_reads_save($request){
         api_printer_tally_reads_bigint(api_printer_tally_reads_request_value($request, array('last_ribbon_change_dot_count', 'lastRibbonChangeDotCount'), null))
     );
 
-    if($readSuccess && $manufacturerSerialNumber === ''){
+    if($manufacturerSerialNumber === ''){
         return array(
             'success' => false,
-            'error' => 'manufacturer_serial_number is required for successful reads'
+            'error' => 'manufacturer_serial_number is required'
         );
     }
 
@@ -252,12 +250,7 @@ function api_printer_tally_reads_save($request){
         }
     }
 
-    $columns[] = 'read_success=?';
-    $params[] = $readSuccess;
-    $types .= 'i';
-
     $stringFields = array(
-        'read_error' => $readError,
         'raw_serial_ascii' => $rawSerialAscii,
         'raw_tally_ascii' => $rawTallyAscii
     );
@@ -283,14 +276,9 @@ function api_printer_tally_reads_save($request){
 
 function api_printer_tally_reads_result_fields(){
     return array(
-        'id',
         'read_at',
-        'user_id',
         'user_name',
         'printer_name',
-        'usb_vendor_id',
-        'usb_product_id',
-        'usb_device_serial',
         'manufacturer_serial_number',
         'dot_count',
         'form_count',
@@ -300,15 +288,26 @@ function api_printer_tally_reads_result_fields(){
         'total_time_on_hours',
         'printer_resets',
         'firmware_updates_count',
-        'external_sheets_loaded',
-        'ribbon_count',
-        'last_ribbon_change_dot_count',
-        'read_success',
-        'read_error',
-        'raw_serial_ascii',
-        'raw_tally_ascii',
-        'created_at'
+        'last_ribbon_change_dot_count'
     );
+}
+
+function api_printer_tally_reads_select_sql(){
+    return implode(', ', array(
+        'ptr.read_at',
+        'ptr.user_name',
+        'ptr.printer_name',
+        'ptr.manufacturer_serial_number',
+        'ptr.dot_count',
+        'ptr.form_count',
+        'ptr.void_count',
+        'ptr.burst_count',
+        'ptr.vault_install_count',
+        'ptr.total_time_on_hours',
+        'ptr.printer_resets',
+        'ptr.firmware_updates_count',
+        'ptr.last_ribbon_change_dot_count'
+    ));
 }
 
 function api_printer_tally_reads_get($limit=200){
@@ -317,7 +316,7 @@ function api_printer_tally_reads_get($limit=200){
     $limit = max(1, min(1000, (int)$limit));
 
     return $db->pec(
-        'SELECT ptr.* FROM printer_tally_reads ptr' . $filter['where'] . ' ORDER BY ptr.read_at DESC LIMIT ' . $limit,
+        'SELECT ' . api_printer_tally_reads_select_sql() . ' FROM printer_tally_reads ptr' . $filter['where'] . ' ORDER BY ptr.read_at DESC LIMIT ' . $limit,
         $filter['params'],
         $filter['types'],
         api_printer_tally_reads_result_fields()
@@ -347,9 +346,7 @@ function api_printer_tally_reads_page($request){
         'ptr.total_time_on_hours',
         'ptr.printer_resets',
         'ptr.firmware_updates_count',
-        'ptr.last_ribbon_change_dot_count',
-        'ptr.read_success',
-        'ptr.created_at'
+        'ptr.last_ribbon_change_dot_count'
     );
 
     $orderColumnIndex = isset($request['order'][0]['column']) ? (int)$request['order'][0]['column'] : 0;
@@ -381,7 +378,7 @@ function api_printer_tally_reads_page($request){
     }
 
     $results = $db->pec(
-        'SELECT ptr.* FROM printer_tally_reads ptr' . $searchFilter['where'] . ' ORDER BY ' . $orderColumn . ' ' . $orderDir . ' LIMIT ' . $start . ', ' . $length,
+        'SELECT ' . api_printer_tally_reads_select_sql() . ' FROM printer_tally_reads ptr' . $searchFilter['where'] . ' ORDER BY ' . $orderColumn . ' ' . $orderDir . ' LIMIT ' . $start . ', ' . $length,
         $searchFilter['params'],
         $searchFilter['types'],
         api_printer_tally_reads_result_fields()
@@ -389,11 +386,6 @@ function api_printer_tally_reads_page($request){
 
     $data = array();
     foreach($results as $row){
-        $status = (int)$row['read_success'] === 1 ? 'Success' : 'Failed';
-        if((int)$row['read_success'] !== 1 && $row['read_error'] !== ''){
-            $status .= ': ' . $row['read_error'];
-        }
-
         $data[] = array(
             api_printer_tally_reads_html($row['read_at']),
             api_printer_tally_reads_html($row['user_name']),
@@ -407,8 +399,7 @@ function api_printer_tally_reads_page($request){
             api_printer_tally_reads_number_html($row['total_time_on_hours']),
             api_printer_tally_reads_number_html($row['printer_resets']),
             api_printer_tally_reads_number_html($row['firmware_updates_count']),
-            api_printer_tally_reads_number_html($row['last_ribbon_change_dot_count']),
-            api_printer_tally_reads_html($status)
+            api_printer_tally_reads_number_html($row['last_ribbon_change_dot_count'])
         );
     }
 
