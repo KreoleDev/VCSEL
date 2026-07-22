@@ -545,6 +545,65 @@ header{
                 color:#fff;
                 box-shadow:0 0 0 3px rgba(0, 85, 140, 0.12);
             }
+        #vcsel_app_nav{
+            float:left;
+            position:relative;
+            margin-right:8px;
+        }
+            #vcsel_app_menu_btn{
+                align-items:center;
+                background:#00558c;
+                border:0;
+                border-radius:6px;
+                box-sizing:border-box;
+                cursor:pointer;
+                display:flex;
+                flex-direction:column;
+                gap:5px;
+                height:42px;
+                justify-content:center;
+                margin:0;
+                padding:0;
+                width:48px;
+            }
+                #vcsel_app_menu_btn:hover,
+                #vcsel_app_menu_btn.active{
+                    background:#004b7c;
+                    box-shadow:0 0 0 3px rgba(0, 85, 140, 0.12);
+                }
+                #vcsel_app_menu_btn span{
+                    background:#fff;
+                    border-radius:3px;
+                    display:block;
+                    height:3px;
+                    width:22px;
+                }
+            #vcsel_app_menu{
+                background:#fff;
+                border:1px solid #d2dce3;
+                border-radius:6px;
+                box-shadow:0 10px 28px rgba(0, 0, 0, 0.14);
+                display:none;
+                min-width:230px;
+                padding:6px 0;
+                position:absolute;
+                right:0;
+                top:48px;
+                z-index:125;
+            }
+                #vcsel_app_menu a{
+                    color:#223846;
+                    display:block;
+                    font-weight:bold;
+                    line-height:20px;
+                    margin:0;
+                    padding:10px 14px;
+                    text-decoration:none;
+                }
+                    #vcsel_app_menu a:hover{
+                        background:#e7f1f6;
+                        color:#00558c;
+                    }
         #profile_menu_btn{
             float:left;
             height: 42px;

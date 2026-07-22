@@ -78,7 +78,7 @@ if(isset($server_file_check)){
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/frm.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/js/datatables/css/jquery.dataTables.min.css" type="text/css" media="screen, projection" />
 	<link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/js/jquery-ui-1.11.4.custom/jquery-ui.min.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/screen.css?v=20260722_apps" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/screen.css?v=20260722_apps_menu" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?=CFG_CMS_BASE_URL; ?>common/css/print.css" type="text/css" media="print" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -130,7 +130,17 @@ if(isset($server_file_check)){
 	    //Profile menu
 	    //---------------------------------------------------------------------------//
 	    $('#profile_menu_btn').click(function(){
+		$('#vcsel_app_menu').hide();
+		$('#vcsel_app_menu_btn').removeClass('active');
 		$('#profile_menu').toggle();
+		$(this).toggleClass('active');
+		return false;
+	    });
+
+	    $('#vcsel_app_menu_btn').click(function(){
+		$('#profile_menu').hide();
+		$('#profile_menu_btn').removeClass('active');
+		$('#vcsel_app_menu').toggle();
 		$(this).toggleClass('active');
 		return false;
 	    });
@@ -139,6 +149,8 @@ if(isset($server_file_check)){
 		if(!$(event.target).closest('#profile_actions').length){
 		    $('#profile_menu').hide();
 		    $('#profile_menu_btn').removeClass('active');
+		    $('#vcsel_app_menu').hide();
+		    $('#vcsel_app_menu_btn').removeClass('active');
 		}
 	    });
 	    //---------------------------------------------------------------------------//
@@ -194,14 +206,23 @@ if(isset($_SESSION['modules'])){
 	
 	<div id="profile_actions">
 	    <?php if(isset($_SESSION['is_vcsel_app_user']) && $_SESSION['is_vcsel_app_user']){ ?>
-		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a>
-		<?php if(in_array(7014,$session_module_ids)){ ?>
-		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7014_camera_testing/index.php?mod_id=7014" title="Camera Testing">Camera Testing</a>
-		<?php } ?>
-		<?php if(in_array(7015,$session_module_ids)){ ?>
-		<a class="vcsel_header_link page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7015_tally_reader/index.php?mod_id=7015" title="Tally Reader">Tally Reader</a>
-		<?php } ?>
-		<a class="vcsel_header_link" href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="APPS">APPS</a>
+		<div id="vcsel_app_nav">
+		    <button id="vcsel_app_menu_btn" type="button" title="Menu" aria-label="Menu">
+			<span></span>
+			<span></span>
+			<span></span>
+		    </button>
+		    <ul id="vcsel_app_menu">
+			<li><a class="page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7001_vcsel_results/index.php?mod_id=7001" title="VCSEL Test Result">VCSEL Test Result</a></li>
+			<?php if(in_array(7014,$session_module_ids)){ ?>
+			<li><a class="page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7014_camera_testing/index.php?mod_id=7014" title="Camera Testing">Camera Testing</a></li>
+			<?php } ?>
+			<?php if(in_array(7015,$session_module_ids)){ ?>
+			<li><a class="page_progress_link" href="<?=CFG_CMS_BASE_URL; ?>modules/addon/7015_tally_reader/index.php?mod_id=7015" title="Tally Reader">Tally Reader</a></li>
+			<?php } ?>
+			<li><a href="<?=CFG_CMS_BASE_URL; ?>vcsel_app.php" title="APPS">APPS</a></li>
+		    </ul>
+		</div>
 	    <?php } ?>
 	    <button id="profile_menu_btn" type="button">
 		<span class="profile_initials"><?=htmlspecialchars($profile_initials,ENT_QUOTES); ?></span>
